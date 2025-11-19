@@ -1,81 +1,33 @@
-const tg = window.Telegram.WebApp;
-tg.ready();
-tg.expand();
+// Минимальный скрипт для VOX mini-app
+(function () {
+  const userIdEl = document.getElementById("user-id");
+  if (!userIdEl) return;
 
-// адрес твоего сервера
-const BACKEND_URL = 'https://miniapp-server-9atc.onrender.com';
+  function setText(text) {
+    userIdEl.textContent = text;
+  }
 
-// какие вкладки платные
-const paidPages = ['technique', 'challenges'];
-
-let isPaid = false;
-
-// показать Telegram ID на экране оплаты
-function showUserId(user, source) {
-  const el = document.getElementById('user-id');
-  if (!el) return;
-
+  // Если Telegram.WebApp недоступен — значит страница открыта в обычном браузере
   if (!window.Telegram || !window.Telegram.WebApp) {
-    el.textContent = 'Откройте через Telegram-бота';
+    setText("Откройте через Telegram-бота");
     return;
   }
 
-  if (user && user.id) {
-    el.textContent = user.id;
-  } else {
-    el.textContent = 'Не удалось получить ID';
-  }
-}
+  const tg = window.Telegram.WebApp;
 
-// обновить видимость блоков .paid-only (на будущее)
-function updatePaidBlocks() {
-  document.querySelectorAll('.paid-only').forEach(el => {
-    el.style.display = isPaid ? 'block' : 'none';
-  });
-}
-
-// проверяем, есть ли оплата
-async function checkAccess() {
   try {
-    const user = tg.initDataUnsafe?.user;
-    showUserId(user);
+    tg.ready();
+    tg.expand && tg.expand();
 
-    // если в Telegram, но user не пришёл – просто не пускаем дальше
-    if (!user) {
-      openPage('pay');
-      return;
+    const user = tg.initDataUnsafe && tg.initDataUnsafe.user;
+
+    if (user && user.id) {
+      setText(String(user.id));
+    } else {
+      setText("Не удалось получить ID, откройте через кнопку в боте");
     }
-
-    const res = await fetch(
-      `${BACKEND_URL}/check?user_id=${user.id}`
-    );
-    const data = await res.json();
-
-    isPaid = !!data.paid;
-    updatePaidBlocks();
-    openPage(isPaid ? 'home' : 'pay');
   } catch (e) {
-    console.error(e);
-    openPage('pay');
+    console.error("Ошибка при работе с Telegram WebApp:", e);
+    setText("Ошибка при получении ID");
   }
-}
-
-// переключение вкладок
-function openPage(pageName) {
-  // если пользователь не оплатил — не пускаем на платные вкладки
-  if (!isPaid && paidPages.includes(pageName)) {
-    pageName = 'pay';
-  }
-
-  document.querySelectorAll('.page')
-    .forEach(p => p.classList.remove('active'));
-
-  const page = document.getElementById(pageName);
-  if (page) page.classList.add('active');
-}
-
-// запускаем проверку при открытии Mini App
-checkAccess();
-
-
-
+})();
