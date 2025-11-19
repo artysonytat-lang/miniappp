@@ -4,7 +4,7 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Логи, чтобы видеть, что запускается именно этот сервер
+// Логи, чтобы точно видеть наш код
 console.log(">>> VOX miniapp server starting...");
 
 // Отдаём статику из текущей папки (index.html, script.js, styles.css)
@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// На всякий случай: все остальные пути тоже ведут на index.html
+// Все остальные пути тоже ведут на index.html
 app.get("*", (req, res) => {
   console.log(">>> GET *", req.path);
   res.sendFile(path.join(__dirname, "index.html"));
