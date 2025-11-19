@@ -1,44 +1,11 @@
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Mini App</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="styles.css">
-</head>
+<div id="pay" class="page">
+  <h2>Доступ по подписке</h2>
+  <p>Материалы этого приложения доступны только после оплаты.</p>
+  <p>Чтобы получить доступ, напишите боту:</p>
+  <a href="https://t.me/ИМЯ_ТВОЕГО_БОТА" target="_blank">
+    Открыть бота для оплаты
+  </a>
+</div>
 
-<body>
 
-  <div id="home" class="page active">
-    <h2>Домашняя</h2>
-    <p>Добро пожаловать в приложение!</p>
-  </div>
-
-  <div id="technique" class="page">
-    <h2>Техника</h2>
-    <p>Здесь будут уроки, упражнения и видео.</p>
-  </div>
-
-  <div id="challenges" class="page">
-    <h2>Челленджи</h2>
-    <p>Здесь будут задания и прогресс.</p>
-  </div>
-
-  <div id="chat" class="page">
-    <h2>Чат</h2>
-    <p>Тут будет общение с участниками.</p>
-  </div>
-
-  <!-- Нижнее меню -->
-  <div class="navbar">
-    <button onclick="openPage('home')">🏠</button>
-    <button onclick="openPage('technique')">🎤</button>
-    <button onclick="openPage('challenges')">🔥</button>
-    <button onclick="openPage('chat')">💬</button>
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
 
