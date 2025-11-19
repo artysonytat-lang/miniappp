@@ -11,13 +11,19 @@ const paidPages = ['technique', 'challenges'];
 let isPaid = false;
 
 // показать Telegram ID на экране оплаты
-function showUserId(user) {
+function showUserId(user, source) {
   const el = document.getElementById('user-id');
   if (!el) return;
+
+  if (!window.Telegram || !window.Telegram.WebApp) {
+    el.textContent = 'Откройте через Telegram-бота';
+    return;
+  }
+
   if (user && user.id) {
     el.textContent = user.id;
   } else {
-    el.textContent = 'не удалось получить ID';
+    el.textContent = 'Не удалось получить ID';
   }
 }
 
@@ -34,6 +40,7 @@ async function checkAccess() {
     const user = tg.initDataUnsafe?.user;
     showUserId(user);
 
+    // если в Telegram, но user не пришёл – просто не пускаем дальше
     if (!user) {
       openPage('pay');
       return;
@@ -71,13 +78,4 @@ function openPage(pageName) {
 checkAccess();
 
 
-  document.querySelectorAll('.page')
-    .forEach(p => p.classList.remove('active'));
-
-  const page = document.getElementById(pageName);
-  if (page) page.classList.add('active');
-}
-
-// запускаем проверку при открытии мини-аппа
-checkAccess();
 
