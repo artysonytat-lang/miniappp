@@ -14,7 +14,7 @@
       padding: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: #05060a;
-      color: #f8f8f8;
+      color: #0f1b18;
     }
 
     .app {
@@ -37,7 +37,7 @@
       width: 48px;
       height: 48px;
       border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, #ffffff, #8cffcf, #1c4838);
+      background: radial-gradient(circle at 30% 20%, #ffffff, #b9ffe0, #2d7a57);
       box-shadow: 0 0 18px rgba(0, 255, 160, 0.7);
       flex-shrink: 0;
     }
@@ -46,6 +46,7 @@
       display: flex;
       flex-direction: column;
       gap: 2px;
+      color: #f8f8f8;
     }
 
     .app-title-main {
@@ -79,6 +80,7 @@
       font-size: 16px;
       font-weight: 600;
       margin: 18px 0 8px;
+      color: #f8f8f8;
     }
 
     /* СВЕТЯЩИЕСЯ КАРТЫ ДЛЯ КНОПОК ВИДЕО */
@@ -119,11 +121,13 @@
     .glow-title {
       font-size: 15px;
       font-weight: 600;
+      color: #f8f8f8;
     }
 
     .glow-sub {
       font-size: 12px;
       opacity: 0.7;
+      color: #d3d7dd;
     }
 
     .glow-btn {
@@ -132,7 +136,7 @@
       padding: 8px 16px;
       font-size: 14px;
       font-weight: 600;
-      background: #00ff88;
+      background: #00c57e;
       color: #052016;
     }
 
@@ -141,10 +145,11 @@
     .board {
       margin-top: 4px;
       padding: 14px;
-      background: rgba(15, 15, 28, 0.96);
+      background: rgba(11, 18, 20, 0.98);
       border-radius: 16px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       font-size: 13px;
+      color: #e2f1ec;
     }
 
     .board-item {
@@ -173,10 +178,11 @@
       margin-top: 18px;
       padding: 14px;
       border-radius: 18px;
-      background: linear-gradient(135deg, #2a1b0a, #3c250d);
-      border: 1px solid rgba(255, 195, 86, 0.5);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
+      background: linear-gradient(135deg, #fdf8ea, #f8f1dd);
+      border: 1px solid rgba(212, 180, 94, 0.7);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
       font-size: 14px;
+      color: #332617;
     }
 
     .pay-title {
@@ -187,7 +193,7 @@
 
     .pay-row {
       font-size: 13px;
-      opacity: 0.85;
+      opacity: 0.9;
       margin-top: 4px;
     }
 
@@ -199,7 +205,7 @@
 
     .pay-user-id span {
       font-family: monospace;
-      background: rgba(0, 0, 0, 0.35);
+      background: rgba(0, 0, 0, 0.06);
       padding: 3px 6px;
       border-radius: 8px;
     }
@@ -210,11 +216,15 @@
       padding: 12px 14px;
       border-radius: 999px;
       text-align: center;
-      background: linear-gradient(135deg, #00ff88, #00c57e);
-      color: #151515;
+      background: linear-gradient(135deg, #00c57e, #00a56a);
+      color: #ffffff;
       font-weight: 700;
       text-decoration: none;
       font-size: 14px;
+    }
+
+    .pay-btn:active {
+      transform: translateY(1px);
     }
 
     /* ЧАТ (обёртка) */
@@ -223,9 +233,102 @@
       margin-top: 16px;
       padding: 14px;
       border-radius: 16px;
-      background: rgba(15, 15, 28, 0.96);
+      background: #0a1110;
       border: 1px solid rgba(255, 255, 255, 0.08);
       font-size: 14px;
+      color: #e5f3ee;
+      display: flex;
+      flex-direction: column;
+      height: 360px;
+    }
+
+    .chat-messages {
+      flex: 1;
+      margin-top: 10px;
+      max-height: 260px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    /* СТИЛЬ СООБЩЕНИЙ — БЕЛО-ЗЕЛЁНЫЕ, В СТИЛЕ МЯГКОГО МЕССЕНДЖЕРА */
+
+    .chat-message {
+      margin-bottom: 8px;
+      padding: 8px 10px;
+      border-radius: 16px;
+      font-size: 13px;
+      max-width: 80%;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+    }
+
+    .chat-message.own {
+      margin-left: auto;
+      background: #d6f7e7; /* мягкий зелёный фон для своих */
+      color: #123424;
+    }
+
+    .chat-message.foreign {
+      margin-right: auto;
+      background: #ffffff; /* белый фон для чужих */
+      color: #1b1b1b;
+    }
+
+    .chat-message-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+      opacity: 0.7;
+      margin-bottom: 3px;
+    }
+
+    .chat-message-name {
+      font-weight: 600;
+    }
+
+    .chat-message-time {
+      white-space: nowrap;
+    }
+
+    .chat-message-text {
+      font-size: 13px;
+    }
+
+    .chat-form {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .chat-input {
+      flex: 1;
+      border-radius: 999px;
+      border: none;
+      padding: 10px 12px;
+      font-size: 14px;
+      background: #ffffff;
+      color: #111111;
+    }
+
+    .chat-input::placeholder {
+      color: #777777;
+    }
+
+    .chat-send-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 0 14px;
+      background: linear-gradient(135deg, #00c57e, #00a56a);
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .chat-send-btn:active {
+      transform: translateY(1px);
     }
 
     /* НИЖНЕЕ МЕНЮ */
@@ -274,11 +377,13 @@
       font-size: 18px;
       font-weight: 600;
       margin: 8px 0 6px;
+      color: #f8f8f8;
     }
 
     .screen-text {
       font-size: 13px;
       opacity: 0.8;
+      color: #d2dde3;
     }
 
     /* МОДАЛКА ДЛЯ ВИДЕО */
@@ -306,6 +411,7 @@
       padding: 16px 16px 14px;
       border: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
+      color: #f8f8f8;
     }
 
     .modal-header {
@@ -344,64 +450,6 @@
       border: 1px dashed rgba(255, 255, 255, 0.25);
       font-size: 13px;
       opacity: 0.8;
-    }
-
-    /* ВНУТРЕННИЙ ЧАТ */
-
-    .chat-messages {
-      margin-top: 10px;
-      max-height: 260px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .chat-message {
-      margin-bottom: 8px;
-      padding: 8px 10px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.06);
-      font-size: 13px;
-    }
-
-    .chat-message-meta {
-      font-size: 11px;
-      opacity: 0.6;
-      margin-bottom: 2px;
-    }
-
-    .chat-form {
-      display: flex;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .chat-input {
-      flex: 1;
-      border-radius: 999px;
-      border: none;
-      padding: 10px 12px;
-      font-size: 14px;
-      background: #ffffff;
-      color: #111111;
-    }
-
-    .chat-input::placeholder {
-      color: #777777;
-    }
-
-    .chat-send-btn {
-      border: none;
-      border-radius: 999px;
-      padding: 0 14px;
-      background: linear-gradient(135deg, #23b5ff, #0066ff);
-      color: #ffffff;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .chat-send-btn:active {
-      transform: translateY(1px);
     }
   </style>
 </head>
@@ -459,10 +507,9 @@
           <div class="pay-user-id">
             Ваш Telegram ID: <span id="user-id">загружается…</span>
           </div>
-          <!-- ССЫЛКА НА ТВОЕГО БОТА ДЛЯ ОПЛАТЫ -->
           <a
-            href="https://t.me/voxvik_bot?start=pay"
-            target="_blank"
+            href="#"
+            id="pay-btn"
             class="pay-btn"
           >
             Оплатить подписку через бота
@@ -490,8 +537,7 @@
       <section id="screen-chat" class="screen">
         <div class="screen-title">Чат сообщества</div>
         <div class="screen-text">
-          Внутренний чат VOX: сюда можно писать вопросы, заметки и инсайты после упражнений.
-          Сейчас сообщения сохраняются только у вас на устройстве. Позже подключим общий чат для всех.
+          Внутренний чат VOX. Здесь сообщения видят все участники (серверная часть — отдельным шагом).
         </div>
 
         <div class="chat-box">
@@ -525,7 +571,7 @@
         <span class="icon">🔥</span>
         <span>Челленджи</span>
       </button>
-      <button class="tab-btn" data-target="chat" style="pointer-events:auto;">
+      <button class="tab-btn" data-target="chat">
         <span class="icon">💬</span>
         <span>Чат</span>
       </button>
