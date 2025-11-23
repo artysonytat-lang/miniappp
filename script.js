@@ -1,4 +1,9 @@
 (function () {
+  let currentUser = {
+    id: null,
+    name: "Гость",
+  };
+
   // ---------- ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ----------
   function setupTabs() {
     const buttons = document.querySelectorAll(".tab-btn");
@@ -6,7 +11,7 @@
       home: document.getElementById("screen-home"),
       tech: document.getElementById("screen-tech"),
       challenges: document.getElementById("screen-challenges"),
-      chat: document.getElementById("screen-chat")
+      chat: document.getElementById("screen-chat"),
     };
 
     buttons.forEach((btn) => {
@@ -66,8 +71,8 @@
     });
   }
 
-  // ---------- ПОЛУЧЕНИЕ TELEGRAM ID ----------
-  function initTelegramId() {
+  // ---------- ПОЛУЧЕНИЕ TELEGRAM ID + ИМЕНИ ----------
+  function initTelegramUser() {
     const userIdEl = document.getElementById("user-id");
     if (!userIdEl) return;
 
@@ -90,6 +95,13 @@
           const user = tg.initDataUnsafe && tg.initDataUnsafe.user;
 
           if (user && user.id) {
+            currentUser.id = user.id;
+            currentUser.name =
+              user.first_name ||
+              user.last_name ||
+              user.username ||
+              "Участник";
+
             setText(String(user.id));
           } else {
             setText("нет данных");
@@ -116,90 +128,158 @@
     }
   }
 
-  // ---------- ВНУТРЕННИЙ ЧАТ (локальный, в localStorage) ----------
+  // ---------- КНОПКА ОПЛАТЫ ЧЕРЕЗ БОТА ----------
+  function setupPayButton() {
+    const btn = document.getElementById("pay-btn");
+    if (!btn) return;
+
+    const botLink = "https://t.me/voxvik_bot?start=pay";
+
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (window.Telegram && window.Telegram.WebApp) {
+        // корректный способ открыть бота из WebApp
+        window.Telegram.WebApp.openTelegramLink(botLink);
+      } else {
+        window.open(botLink, "_blank");
+      }
+    });
+  }
+
+  // ---------- ВНУТРЕННИЙ ЧАТ (БОЕВОЙ, через сервер) ----------
+
+  const CHAT_API_BASE = "/api/chat";
+
   function setupChat() {
     const form = document.getElementById("chat-form");
     const input = document.getElementById("chat-input");
     const listEl = document.getElementById("chat-messages");
     if (!form || !input || !listEl) return;
 
-    const STORAGE_KEY = "vox_local_chat";
     let messages = [];
-
-    function load() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) {
-          messages = JSON.parse(raw);
-        } else {
-          messages = [];
-        }
-      } catch (e) {
-        console.error("Ошибка чтения чата:", e);
-        messages = [];
-      }
-    }
-
-    function save() {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
-      } catch (e) {
-        console.error("Ошибка сохранения чата:", e);
-      }
-    }
+    let isLoading = false;
+    let lastTimestamp = null;
 
     function render() {
       listEl.innerHTML = "";
       messages.forEach((m) => {
         const wrap = document.createElement("div");
-        wrap.className = "chat-message";
+        const isOwn = currentUser.id && m.user_id === currentUser.id;
+        wrap.className = "chat-message " + (isOwn ? "own" : "foreign");
 
-        const meta = document.createElement("div");
-        meta.className = "chat-message-meta";
-        meta.textContent = m.time || "";
+        const header = document.createElement("div");
+        header.className = "chat-message-header";
 
-        const text = document.createElement("div");
-        text.textContent = m.text;
+        const nameEl = document.createElement("div");
+        nameEl.className = "chat-message-name";
+        nameEl.textContent = m.user_name || "Участник";
 
-        wrap.appendChild(meta);
-        wrap.appendChild(text);
+        const timeEl = document.createElement("div");
+        timeEl.className = "chat-message-time";
+        timeEl.textContent = m.time || "";
+
+        header.appendChild(nameEl);
+        header.appendChild(timeEl);
+
+        const textEl = document.createElement("div");
+        textEl.className = "chat-message-text";
+        textEl.textContent = m.text;
+
+        wrap.appendChild(header);
+        wrap.appendChild(textEl);
         listEl.appendChild(wrap);
       });
 
       listEl.scrollTop = listEl.scrollHeight;
     }
 
-    load();
-    render();
+    async function fetchMessages(initial = false) {
+      if (isLoading) return;
+      isLoading = true;
+      try {
+        const url = lastTimestamp
+          ? `${CHAT_API_BASE}/messages?after=${encodeURIComponent(
+              lastTimestamp
+            )}`
+          : `${CHAT_API_BASE}/messages`;
 
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Ошибка загрузки чата");
+        const data = await res.json();
+
+        if (Array.isArray(data.messages) && data.messages.length > 0) {
+          // если initial — просто заменяем, иначе добавляем новые
+          if (initial) {
+            messages = data.messages;
+          } else {
+            messages = messages.concat(data.messages);
+          }
+
+          const last = data.messages[data.messages.length - 1];
+          lastTimestamp = last.created_at;
+          render();
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        isLoading = false;
+      }
+    }
+
+    async function sendMessage(text) {
+      if (!text.trim()) return;
+      try {
+        const payload = {
+          userId: currentUser.id,
+          userName: currentUser.name,
+          text: text.trim(),
+        };
+
+        const res = await fetch(`${CHAT_API_BASE}/messages`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) throw new Error("Ошибка отправки сообщения");
+        const data = await res.json();
+        if (data && data.message) {
+          messages.push(data.message);
+          lastTimestamp = data.message.created_at;
+          render();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // обработчик формы
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       const value = (input.value || "").trim();
       if (!value) return;
-
-      const now = new Date();
-      const time = now.toLocaleTimeString("ru-RU", {
-        hour: "2-digit",
-        minute: "2-digit"
-      });
-
-      messages.push({
-        text: value,
-        time: time
-      });
-
       input.value = "";
-      save();
-      render();
+      sendMessage(value);
     });
+
+    // начальная загрузка
+    fetchMessages(true);
+
+    // периодическая подгрузка новых
+    setInterval(() => {
+      fetchMessages(false);
+    }, 3000);
   }
 
   // ---------- СТАРТ ----------
   function onReady() {
     setupTabs();
     setupVideoModal();
-    initTelegramId();
-    setupChat(); // внутренняя вкладка Чат
+    initTelegramUser();
+    setupPayButton();
+    setupChat();
   }
 
   if (document.readyState === "loading") {
@@ -208,5 +288,3 @@
     onReady();
   }
 })();
-
-
