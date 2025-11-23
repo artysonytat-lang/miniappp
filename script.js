@@ -6,18 +6,16 @@
       home: document.getElementById("screen-home"),
       tech: document.getElementById("screen-tech"),
       challenges: document.getElementById("screen-challenges"),
-      chat: document.getElementById("screen-chat"),
+      chat: document.getElementById("screen-chat")
     };
 
     buttons.forEach((btn) => {
       btn.addEventListener("click", () => {
         const target = btn.getAttribute("data-target");
 
-        // активируем нужную вкладку
         buttons.forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
 
-        // показываем нужный экран
         Object.keys(screens).forEach((key) => {
           screens[key].classList.toggle("active", key === target);
         });
@@ -25,14 +23,14 @@
     });
   }
 
-  // ---------- МОДАЛКА С ВИДЕО (ПОКА ЗАГЛУШКА) ----------
+  // ---------- МОДАЛКА ДЛЯ ВИДЕО (пока заглушка) ----------
   function setupVideoModal() {
     const modal = document.getElementById("video-modal");
     const modalTitle = document.getElementById("video-modal-title");
     const modalText = document.getElementById("video-modal-text");
     const closeBtn = document.getElementById("video-modal-close");
 
-    const videoButtons = document.querySelectorAll(".tile-btn[data-video]");
+    const cards = document.querySelectorAll(".glow-card");
 
     function openModal(type) {
       if (type === "welcome") {
@@ -54,19 +52,17 @@
       modal.classList.remove("active");
     }
 
-    videoButtons.forEach((btn) => {
-      btn.addEventListener("click", (e) => {
+    cards.forEach((card) => {
+      card.addEventListener("click", (e) => {
         e.preventDefault();
-        const type = btn.getAttribute("data-video");
+        const type = card.getAttribute("data-video");
         openModal(type);
       });
     });
 
     closeBtn.addEventListener("click", closeModal);
     modal.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        closeModal();
-      }
+      if (e.target === modal) closeModal();
     });
   }
 
@@ -80,7 +76,7 @@
     }
 
     let attempts = 0;
-    const MAX_ATTEMPTS = 20; // 2 секунды по 100мс
+    const MAX_ATTEMPTS = 20;
 
     function tryInit() {
       attempts += 1;
@@ -89,7 +85,7 @@
         try {
           const tg = window.Telegram.WebApp;
           tg.ready();
-          tg.expand && tg.expand();
+          if (tg.expand) tg.expand();
 
           const user = tg.initDataUnsafe && tg.initDataUnsafe.user;
 
@@ -110,7 +106,6 @@
         return;
       }
 
-      // если Telegram WebApp так и не появился — значит, открыт обычный браузер
       setText("откройте через Telegram");
     }
 
@@ -121,11 +116,90 @@
     }
   }
 
+  // ---------- ВНУТРЕННИЙ ЧАТ (локальный, в localStorage) ----------
+  function setupChat() {
+    const form = document.getElementById("chat-form");
+    const input = document.getElementById("chat-input");
+    const listEl = document.getElementById("chat-messages");
+    if (!form || !input || !listEl) return;
+
+    const STORAGE_KEY = "vox_local_chat";
+    let messages = [];
+
+    function load() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          messages = JSON.parse(raw);
+        } else {
+          messages = [];
+        }
+      } catch (e) {
+        console.error("Ошибка чтения чата:", e);
+        messages = [];
+      }
+    }
+
+    function save() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+      } catch (e) {
+        console.error("Ошибка сохранения чата:", e);
+      }
+    }
+
+    function render() {
+      listEl.innerHTML = "";
+      messages.forEach((m) => {
+        const wrap = document.createElement("div");
+        wrap.className = "chat-message";
+
+        const meta = document.createElement("div");
+        meta.className = "chat-message-meta";
+        meta.textContent = m.time || "";
+
+        const text = document.createElement("div");
+        text.textContent = m.text;
+
+        wrap.appendChild(meta);
+        wrap.appendChild(text);
+        listEl.appendChild(wrap);
+      });
+
+      listEl.scrollTop = listEl.scrollHeight;
+    }
+
+    load();
+    render();
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const value = (input.value || "").trim();
+      if (!value) return;
+
+      const now = new Date();
+      const time = now.toLocaleTimeString("ru-RU", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+
+      messages.push({
+        text: value,
+        time: time
+      });
+
+      input.value = "";
+      save();
+      render();
+    });
+  }
+
   // ---------- СТАРТ ----------
   function onReady() {
     setupTabs();
     setupVideoModal();
     initTelegramId();
+    setupChat(); // внутренняя вкладка Чат
   }
 
   if (document.readyState === "loading") {
