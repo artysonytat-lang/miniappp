@@ -2,62 +2,491 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>VOX — доступ по подписке</title>
+  <title>VOX — мини-приложение</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body {
-      margin: 20px;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #ffffff;
-      color: #000000;
-      line-height: 1.5;
+    * {
+      box-sizing: border-box;
     }
-    h2 {
-      margin-top: 0;
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0b0b10;
+      color: #f8f8f8;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 64px; /* место под нижнее меню */
+    }
+
+    .app-header {
+      padding: 16px 20px 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #ffffff, #8888ff, #222244);
+      box-shadow: 0 0 18px rgba(150, 140, 255, 0.7);
+      flex-shrink: 0;
+    }
+
+    .app-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .app-title-main {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .app-title-sub {
+      font-size: 13px;
+      opacity: 0.7;
+    }
+
+    main {
+      padding: 0 20px 16px;
+      flex: 1;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .tile-btn {
+      display: block;
+      width: 100%;
+      padding: 16px 18px;
+      margin: 10px 0;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      text-decoration: none;
+      color: #f8f8f8;
+      background: radial-gradient(circle at 0% 0%, rgba(255,255,255,0.08), transparent) #151522;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .tile-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .tile-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .tile-sub {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    .tile-icon {
+      font-size: 20px;
+      opacity: 0.9;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 18px 0 8px;
+    }
+
+    .board {
+      margin-top: 4px;
+      padding: 14px;
+      background: rgba(15, 15, 28, 0.96);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .board-item {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 13px;
+    }
+
+    .board-item:last-child {
+      border-bottom: none;
+    }
+
+    .board-item-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .board-item-date {
+      font-size: 11px;
+      opacity: 0.6;
+      margin-bottom: 2px;
+    }
+
+    .pay-box {
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #2a1b0a, #3c250d);
+      border: 1px solid rgba(255, 195, 86, 0.5);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
+      font-size: 14px;
+    }
+
+    .pay-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .pay-row {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-top: 4px;
+    }
+
+    .pay-user-id {
+      margin-top: 4px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .pay-user-id span {
+      font-family: monospace;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 3px 6px;
+      border-radius: 8px;
+    }
+
+    .pay-btn {
+      display: block;
+      margin-top: 10px;
+      padding: 12px 14px;
+      border-radius: 999px;
+      text-align: center;
+      background: linear-gradient(135deg, #ffb322, #ff7b0a);
+      color: #151515;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .pay-btn:active {
+      transform: translateY(1px);
+    }
+
+    /* Вкладки снизу */
+
+    .tabs {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 56px;
+      padding: 4px 10px 6px;
+      background: rgba(4, 4, 12, 0.96);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      backdrop-filter: blur(14px);
+    }
+
+    .tab-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: #aaa;
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 4px 0;
+      border-radius: 999px;
+    }
+
+    .tab-btn span.icon {
+      font-size: 17px;
+    }
+
+    .tab-btn.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    /* Заглушки других экранов */
+
+    .screen-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 8px 0 6px;
+    }
+
+    .screen-text {
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    .chat-box {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(15, 15, 28, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 14px;
+    }
+
+    .chat-btn {
+      display: block;
+      margin-top: 12px;
+      padding: 11px 14px;
+      text-align: center;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #23b5ff, #0066ff);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    /* Модалка для видео */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 50;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 420px;
+      background: #11111a;
+      border-radius: 18px;
+      padding: 16px 16px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
       margin-bottom: 8px;
     }
-    #user-id {
-      display: inline-block;
-      margin-top: 6px;
-      padding: 6px 10px;
-      border-radius: 6px;
-      background: #eeeeee;
-      font-family: monospace;
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 600;
     }
-    a.btn {
-      display: inline-block;
-      margin-top: 16px;
-      padding: 8px 14px;
-      border-radius: 6px;
-      background: #000000;
-      color: #ffffff;
-      text-decoration: none;
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: #aaa;
+      font-size: 20px;
+      line-height: 1;
+      padding: 0 2px;
+    }
+
+    .modal-body {
+      font-size: 13px;
+      opacity: 0.85;
+    }
+
+    .modal-placeholder {
+      margin-top: 10px;
+      padding: 26px 12px;
+      text-align: center;
+      border-radius: 12px;
+      border: 1px dashed rgba(255, 255, 255, 0.25);
+      font-size: 13px;
+      opacity: 0.8;
     }
   </style>
 </head>
 <body>
-  <div id="pay">
-    <h2>Доступ по подписке</h2>
-    <p>Сейчас вы в демо-режиме. Полный доступ к технике и челленджам открыт по подписке.</p>
+  <div class="app">
+    <header class="app-header">
+      <div class="logo"></div>
+      <div class="app-title">
+        <div class="app-title-main">VOX</div>
+        <div class="app-title-sub">вокальное мини-приложение</div>
+      </div>
+    </header>
 
-    <p><strong>Как получить доступ:</strong></p>
-    <ol>
-      <li>Оплатите доступ любым удобным способом (инструкции есть у бота).</li>
-      <li>
-        Отправьте боту ваш Telegram ID:
-        <br />
-        <span id="user-id">загружается…</span>
-      </li>
-    </ol>
+    <main>
+      <!-- ЭКРАН 1: ГЛАВНАЯ -->
+      <section id="screen-home" class="screen active">
+        <a href="#" class="tile-btn" data-video="welcome">
+          <div class="tile-text">
+            <div class="tile-title">Приветственное видео</div>
+            <div class="tile-sub">о том, что тебя ждёт внутри VOX</div>
+          </div>
+          <div class="tile-icon">▶</div>
+        </a>
 
-    <a href="https://t.me/voxvik_bot" target="_blank" class="btn">
-      Написать боту для оплаты
-    </a>
+        <a href="#" class="tile-btn" data-video="howto">
+          <div class="tile-text">
+            <div class="tile-title">Как пользоваться приложением</div>
+            <div class="tile-sub">короткий разбор разделов и логики</div>
+          </div>
+          <div class="tile-icon">▶</div>
+        </a>
+
+        <div class="section-title">📌 Доска объявлений</div>
+        <div class="board" id="board">
+          <div class="board-item">
+            <div class="board-item-title">Добро пожаловать в VOX</div>
+            <div class="board-item-date">Сегодня</div>
+            <div>Здесь будут появляться важные новости, челленджи и обновления приложения.</div>
+          </div>
+          <div class="board-item">
+            <div class="board-item-title">Скоро: приветственное видео</div>
+            <div class="board-item-date">Скоро</div>
+            <div>Мы готовим первое видео-приветствие и подробный обзор структуры VOX.</div>
+          </div>
+        </div>
+
+        <div class="pay-box">
+          <div class="pay-title">💛 Подписка VOX</div>
+          <div class="pay-row">
+            Полный доступ к технике, упражнениям, челленджам и материалам.
+          </div>
+          <div class="pay-row">
+            Оплата и управление подпиской происходят через бота в Telegram.
+          </div>
+          <div class="pay-user-id">
+            Ваш Telegram ID: <span id="user-id">загружается…</span>
+          </div>
+          <!-- ЗДЕСЬ ЗАМЕНИШЬ ССЫЛКУ НА СВОЕГО БОТА И ПАРАМЕТР -->
+          <a
+            href="https://t.me/voxvik_bot?start=pay"
+            target="_blank"
+            class="pay-btn"
+          >
+            Оплатить подписку через бота
+          </a>
+        </div>
+      </section>
+
+      <!-- ЭКРАН 2: ТЕХНИКА -->
+      <section id="screen-tech" class="screen">
+        <div class="screen-title">Техника</div>
+        <div class="screen-text">
+          Здесь появятся разделы с упражнениями: дыхание, опора, диапазон, резонаторы и многое другое.
+        </div>
+      </section>
+
+      <!-- ЭКРАН 3: ЧЕЛЛЕНДЖИ -->
+      <section id="screen-challenges" class="screen">
+        <div class="screen-title">Челленджи</div>
+        <div class="screen-text">
+          Здесь будут недельные и месячные челленджи, задания и прогресс тренировок.
+        </div>
+      </section>
+
+      <!-- ЭКРАН 4: ЧАТ -->
+      <section id="screen-chat" class="screen">
+        <div class="screen-title">Чат сообщества</div>
+        <div class="screen-text">
+          Здесь мы собираем всех вокалистов VOX: делимся результатами, вопросами и поддержкой.
+        </div>
+        <div class="chat-box">
+          <div>
+            В чате можно:
+            <ul style="margin: 6px 0 0 18px; padding: 0; font-size: 13px;">
+              <li>делиться голосовыми и видео;</li>
+              <li>спрашивать совета по упражнениям;</li>
+              <li>участвовать в живых обсуждениях и эфирах.</li>
+            </ul>
+          </div>
+          <!-- СЮДА ПОТОМ ПОДСТАВИШЬ СВОЮ ССЫЛКУ НА ГРУППУ -->
+          <a
+            href="https://t.me/"
+            target="_blank"
+            class="chat-btn"
+          >
+            Открыть чат сообщества
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <!-- НИЖНЕЕ МЕНЮ -->
+    <nav class="tabs">
+      <button class="tab-btn active" data-target="home">
+        <span class="icon">🏠</span>
+        <span>Главная</span>
+      </button>
+      <button class="tab-btn" data-target="tech">
+        <span class="icon">🎤</span>
+        <span>Техника</span>
+      </button>
+      <button class="tab-btn" data-target="challenges">
+        <span class="icon">🔥</span>
+        <span>Челленджи</span>
+      </button>
+      <button class="tab-btn" data-target="chat">
+        <span class="icon">💬</span>
+        <span>Чат</span>
+      </button>
+    </nav>
   </div>
 
-  <!-- Сначала подключаем Telegram WebApp SDK -->
+  <!-- МОДАЛКА ДЛЯ ВИДЕО -->
+  <div class="modal-backdrop" id="video-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="video-modal-title">Видео</div>
+        <button class="modal-close" type="button" id="video-modal-close">×</button>
+      </div>
+      <div class="modal-body">
+        <div id="video-modal-text">
+          Здесь будет видео. Сейчас оно в процессе записи.
+        </div>
+        <div class="modal-placeholder">
+          💡 Как только видео будет готово, мы просто подставим сюда плеер, а структура страницы останется той же.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- Потом наш скрипт, который читает Telegram.WebApp -->
+  <!-- Ваш основной скрипт -->
   <script src="script.js"></script>
 </body>
 </html>
