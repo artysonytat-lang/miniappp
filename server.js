@@ -1,4 +1,4 @@
-// index.js — сервер мини-приложения VOX с чат-API
+// server.js — сервер мини-приложения VOX с API чата
 
 const express = require("express");
 const path = require("path");
@@ -7,7 +7,7 @@ const { Pool } = require("pg");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ----- НАСТРОЙКА БАЗЫ ДАННЫХ -----
+// ---------- НАСТРОЙКА БАЗЫ ДАННЫХ ----------
 
 let pool = null;
 
@@ -43,23 +43,22 @@ initDb().catch((err) => {
   console.error("Ошибка инициализации БД:", err);
 });
 
-// ----- MIDDLEWARE -----
+// ---------- MIDDLEWARE ----------
 
 app.use(express.json());
 
-// статика: index.html и script.js лежат в корне
+// статика: index.html, script.js, styles.css лежат в корне
 const publicDir = __dirname;
 app.use(express.static(publicDir));
 
-// отдаём index.html по корню
+// корень — просто отдаём index.html
 app.get("/", (req, res) => {
   res.sendFile(path.join(publicDir, "index.html"));
 });
 
-// ----- API ЧАТА -----
+// ---------- API ЧАТА ----------
 
 // GET /api/chat/messages?after=ISO
-// если after нет — отдаем последние 50 сообщений
 app.get("/api/chat/messages", async (req, res) => {
   if (!pool) {
     return res.json({ messages: [] });
@@ -92,7 +91,7 @@ app.get("/api/chat/messages", async (req, res) => {
         LIMIT 50
       `
       );
-      // разворачиваем в хронологию по возрастанию
+      // чтобы в чате было по возрастанию времени
       result.rows.reverse();
     }
 
@@ -142,8 +141,9 @@ app.post("/api/chat/messages", async (req, res) => {
   }
 });
 
-// ----- СТАРТ СЕРВЕРА -----
+// ---------- СТАРТ СЕРВЕРА ----------
 
 app.listen(PORT, () => {
   console.log(`VOX miniapp server listening on port ${PORT}`);
 });
+
