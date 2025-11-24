@@ -12,33 +12,37 @@
     body {
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #05060a;
-      color: #0f1b18;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: #f5f5f7;
+      color: #111827;
     }
 
     .app {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      background: #f5f5f7;
       padding-bottom: 64px; /* место под нижнее меню */
     }
 
     /* ШАПКА */
 
     .app-header {
-      padding: 16px 20px 8px;
+      padding: 14px 20px 10px;
       display: flex;
       align-items: center;
       gap: 12px;
+      background: #ffffff;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.06);
     }
 
     .logo {
-      width: 48px;
-      height: 48px;
+      width: 44px;
+      height: 44px;
       border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, #ffffff, #b9ffe0, #2d7a57);
-      box-shadow: 0 0 18px rgba(0, 255, 160, 0.7);
+      background: radial-gradient(circle at 30% 20%, #ffffff, #bff7d9, #4bc38f);
+      box-shadow: 0 0 12px rgba(26, 172, 111, 0.35);
       flex-shrink: 0;
     }
 
@@ -46,23 +50,23 @@
       display: flex;
       flex-direction: column;
       gap: 2px;
-      color: #f8f8f8;
     }
 
     .app-title-main {
       font-size: 18px;
       font-weight: 700;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
+      color: #111827;
     }
 
     .app-title-sub {
       font-size: 13px;
-      opacity: 0.7;
+      color: #6b7280;
     }
 
     main {
-      padding: 0 20px 16px;
+      padding: 10px 18px 18px;
       flex: 1;
     }
 
@@ -76,58 +80,83 @@
       display: block;
     }
 
-    .section-title {
-      font-size: 16px;
+    .screen-title {
+      font-size: 18px;
       font-weight: 600;
-      margin: 18px 0 8px;
-      color: #f8f8f8;
+      margin: 4px 0 6px;
+      color: #111827;
     }
 
-    /* СВЕТЯЩИЕСЯ КАРТЫ ДЛЯ КНОПОК ВИДЕО */
+    .screen-text {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin: 18px 0 8px;
+      color: #111827;
+    }
+
+    /* КАРТОЧКИ ВИДЕО (светлый, с зелёным свечением) */
 
     .glow-card {
       position: relative;
-      border-radius: 22px;
+      border-radius: 18px;
       overflow: hidden;
       margin: 10px 0;
-      padding: 2px;
-      background: radial-gradient(circle at 0% 0%, rgba(0, 255, 160, 0.6), transparent);
-      box-shadow: 0 0 26px rgba(0, 255, 160, 0.4);
-      transition: box-shadow 0.25s ease-out, transform 0.25s ease-out;
+      background: #ffffff;
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      box-shadow: 0 8px 20px rgba(148, 163, 184, 0.16);
       cursor: pointer;
+      transition: box-shadow 0.2s ease-out, transform 0.2s ease-out,
+        border-color 0.2s ease-out;
+    }
+
+    .glow-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(
+        circle at 0% 0%,
+        rgba(34, 197, 94, 0.18),
+        transparent 55%
+      );
+      pointer-events: none;
     }
 
     .glow-card-inner {
-      border-radius: 20px;
-      background: #181820;
+      position: relative;
       padding: 14px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 12px;
     }
 
     .glow-card:hover {
-      box-shadow: 0 0 30px rgba(0, 255, 160, 0.7);
+      box-shadow: 0 10px 26px rgba(74, 222, 128, 0.35);
       transform: translateY(-1px);
+      border-color: rgba(34, 197, 94, 0.35);
     }
 
     .glow-text {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
 
     .glow-title {
       font-size: 15px;
       font-weight: 600;
-      color: #f8f8f8;
+      color: #111827;
     }
 
     .glow-sub {
       font-size: 12px;
-      opacity: 0.7;
-      color: #d3d7dd;
+      color: #6b7280;
     }
 
     .glow-btn {
@@ -136,25 +165,26 @@
       padding: 8px 16px;
       font-size: 14px;
       font-weight: 600;
-      background: #00c57e;
-      color: #052016;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.45);
     }
 
     /* ДОСКА ОБЪЯВЛЕНИЙ */
 
     .board {
       margin-top: 4px;
-      padding: 14px;
-      background: rgba(11, 18, 20, 0.98);
+      padding: 12px 14px;
+      background: #ffffff;
       border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      box-shadow: 0 6px 14px rgba(148, 163, 184, 0.14);
       font-size: 13px;
-      color: #e2f1ec;
     }
 
     .board-item {
       padding: 8px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.2);
     }
 
     .board-item:last-child {
@@ -164,11 +194,12 @@
     .board-item-title {
       font-weight: 600;
       margin-bottom: 2px;
+      color: #111827;
     }
 
     .board-item-date {
       font-size: 11px;
-      opacity: 0.6;
+      color: #9ca3af;
       margin-bottom: 2px;
     }
 
@@ -178,34 +209,35 @@
       margin-top: 18px;
       padding: 14px;
       border-radius: 18px;
-      background: linear-gradient(135deg, #fdf8ea, #f8f1dd);
-      border: 1px solid rgba(212, 180, 94, 0.7);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      background: linear-gradient(135deg, #fdf5e6, #fefbea);
+      border: 1px solid rgba(234, 179, 8, 0.55);
+      box-shadow: 0 8px 18px rgba(202, 138, 4, 0.25);
       font-size: 14px;
-      color: #332617;
+      color: #78350f;
     }
 
     .pay-title {
       font-size: 16px;
       font-weight: 700;
       margin-bottom: 6px;
+      color: #78350f;
     }
 
     .pay-row {
       font-size: 13px;
-      opacity: 0.9;
       margin-top: 4px;
+      color: #92400e;
     }
 
     .pay-user-id {
       margin-top: 6px;
       font-size: 12px;
-      opacity: 0.8;
+      color: #b45309;
     }
 
     .pay-user-id span {
       font-family: monospace;
-      background: rgba(0, 0, 0, 0.06);
+      background: rgba(0, 0, 0, 0.05);
       padding: 3px 6px;
       border-radius: 8px;
     }
@@ -216,27 +248,28 @@
       padding: 12px 14px;
       border-radius: 999px;
       text-align: center;
-      background: linear-gradient(135deg, #00c57e, #00a56a);
+      background: linear-gradient(135deg, #22c55e, #16a34a);
       color: #ffffff;
       font-weight: 700;
       text-decoration: none;
       font-size: 14px;
+      box-shadow: 0 6px 18px rgba(34, 197, 94, 0.5);
     }
 
     .pay-btn:active {
       transform: translateY(1px);
     }
 
-    /* ЧАТ (обёртка) */
+    /* ЧАТ */
 
     .chat-box {
-      margin-top: 16px;
-      padding: 14px;
+      margin-top: 14px;
+      padding: 10px 12px;
       border-radius: 16px;
-      background: #0a1110;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: #ffffff;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: 0 6px 16px rgba(148, 163, 184, 0.25);
       font-size: 14px;
-      color: #e5f3ee;
       display: flex;
       flex-direction: column;
       height: 360px;
@@ -244,35 +277,33 @@
 
     .chat-messages {
       flex: 1;
-      margin-top: 10px;
+      margin-top: 8px;
       max-height: 260px;
       overflow-y: auto;
       padding-right: 4px;
     }
 
-    /* СТИЛЬ СООБЩЕНИЙ — БЕЛО-ЗЕЛЁНЫЕ, В СТИЛЕ МЯГКОГО МЕССЕНДЖЕРА */
-
     .chat-message {
       margin-bottom: 8px;
       padding: 8px 10px;
-      border-radius: 16px;
+      border-radius: 18px;
       font-size: 13px;
       max-width: 80%;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+      box-shadow: 0 3px 8px rgba(148, 163, 184, 0.35);
     }
 
     .chat-message.own {
       margin-left: auto;
-      background: #d6f7e7; /* мягкий зелёный фон для своих */
-      color: #123424;
+      background: #dcfce7; /* мягкий зелёный */
+      color: #064e3b;
     }
 
     .chat-message.foreign {
       margin-right: auto;
-      background: #ffffff; /* белый фон для чужих */
-      color: #1b1b1b;
+      background: #ffffff;
+      color: #111827;
     }
 
     .chat-message-header {
@@ -280,7 +311,7 @@
       justify-content: space-between;
       gap: 8px;
       font-size: 11px;
-      opacity: 0.7;
+      color: #6b7280;
       margin-bottom: 3px;
     }
 
@@ -305,26 +336,27 @@
     .chat-input {
       flex: 1;
       border-radius: 999px;
-      border: none;
-      padding: 10px 12px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      padding: 9px 12px;
       font-size: 14px;
-      background: #ffffff;
-      color: #111111;
+      background: #f9fafb;
+      color: #111827;
     }
 
     .chat-input::placeholder {
-      color: #777777;
+      color: #9ca3af;
     }
 
     .chat-send-btn {
       border: none;
       border-radius: 999px;
       padding: 0 14px;
-      background: linear-gradient(135deg, #00c57e, #00a56a);
+      background: linear-gradient(135deg, #22c55e, #16a34a);
       color: #ffffff;
       font-weight: 600;
       font-size: 14px;
       cursor: pointer;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.5);
     }
 
     .chat-send-btn:active {
@@ -339,21 +371,21 @@
       right: 0;
       bottom: 0;
       height: 56px;
-      padding: 4px 10px 6px;
-      background: rgba(4, 4, 12, 0.96);
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 4px 12px 6px;
+      background: rgba(255, 255, 255, 0.96);
+      border-top: 1px solid rgba(148, 163, 184, 0.35);
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 6px;
-      backdrop-filter: blur(14px);
+      backdrop-filter: blur(18px);
     }
 
     .tab-btn {
       flex: 1;
       border: none;
       background: transparent;
-      color: #aaa;
+      color: #9ca3af;
       font-size: 11px;
       display: flex;
       flex-direction: column;
@@ -369,29 +401,16 @@
     }
 
     .tab-btn.active {
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
+      background: rgba(34, 197, 94, 0.08);
+      color: #16a34a;
     }
 
-    .screen-title {
-      font-size: 18px;
-      font-weight: 600;
-      margin: 8px 0 6px;
-      color: #f8f8f8;
-    }
-
-    .screen-text {
-      font-size: 13px;
-      opacity: 0.8;
-      color: #d2dde3;
-    }
-
-    /* МОДАЛКА ДЛЯ ВИДЕО */
+    /* МОДАЛКА ВИДЕО */
 
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(15, 23, 42, 0.45);
       display: none;
       align-items: center;
       justify-content: center;
@@ -406,12 +425,12 @@
     .modal {
       width: 100%;
       max-width: 420px;
-      background: #11111a;
+      background: #ffffff;
       border-radius: 18px;
       padding: 16px 16px 14px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
-      color: #f8f8f8;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.4);
+      color: #111827;
     }
 
     .modal-header {
@@ -430,7 +449,7 @@
     .modal-close {
       background: transparent;
       border: none;
-      color: #aaa;
+      color: #9ca3af;
       font-size: 20px;
       line-height: 1;
       padding: 0 2px;
@@ -439,17 +458,17 @@
 
     .modal-body {
       font-size: 13px;
-      opacity: 0.85;
+      color: #4b5563;
     }
 
     .modal-placeholder {
       margin-top: 10px;
-      padding: 26px 12px;
+      padding: 22px 12px;
       text-align: center;
       border-radius: 12px;
-      border: 1px dashed rgba(255, 255, 255, 0.25);
+      border: 1px dashed rgba(148, 163, 184, 0.8);
       font-size: 13px;
-      opacity: 0.8;
+      color: #6b7280;
     }
   </style>
 </head>
@@ -466,7 +485,6 @@
     <main>
       <!-- ГЛАВНЫЙ ЭКРАН -->
       <section id="screen-home" class="screen active">
-        <!-- две светящиеся карточки -->
         <div class="glow-card" data-video="welcome">
           <div class="glow-card-inner">
             <div class="glow-text">
@@ -492,7 +510,10 @@
           <div class="board-item">
             <div class="board-item-title">Добро пожаловать в VOX</div>
             <div class="board-item-date">Сегодня</div>
-            <div>Здесь будут важные новости, челленджи и обновления приложения.</div>
+            <div>
+              Здесь будут важные новости, объявления, челленджи и обновления
+              приложения.
+            </div>
           </div>
         </div>
 
@@ -507,11 +528,7 @@
           <div class="pay-user-id">
             Ваш Telegram ID: <span id="user-id">загружается…</span>
           </div>
-          <a
-            href="#"
-            id="pay-btn"
-            class="pay-btn"
-          >
+          <a href="#" id="pay-btn" class="pay-btn">
             Оплатить подписку через бота
           </a>
         </div>
@@ -521,7 +538,8 @@
       <section id="screen-tech" class="screen">
         <div class="screen-title">Техника</div>
         <div class="screen-text">
-          Здесь появятся разделы с упражнениями: дыхание, опора, диапазон, резонаторы и многое другое.
+          Здесь появятся блоки с упражнениями: дыхание, опора, диапазон,
+          резонаторы и многое другое.
         </div>
       </section>
 
@@ -529,7 +547,8 @@
       <section id="screen-challenges" class="screen">
         <div class="screen-title">Челленджи</div>
         <div class="screen-text">
-          Здесь будут недельные и месячные челленджи, задания и прогресс тренировок.
+          Здесь будут недельные и месячные челленджи, задания и прогресс
+          тренировок.
         </div>
       </section>
 
@@ -537,7 +556,8 @@
       <section id="screen-chat" class="screen">
         <div class="screen-title">Чат сообщества</div>
         <div class="screen-text">
-          Внутренний чат VOX. Здесь сообщения видят все участники (серверная часть — отдельным шагом).
+          Внутренний чат VOX. Здесь сообщения видят все участники. Сообщения
+          сохраняются на сервере.
         </div>
 
         <div class="chat-box">
@@ -583,14 +603,21 @@
     <div class="modal">
       <div class="modal-header">
         <div class="modal-title" id="video-modal-title">Видео</div>
-        <button class="modal-close" type="button" id="video-modal-close">×</button>
+        <button
+          class="modal-close"
+          type="button"
+          id="video-modal-close"
+        >
+          ×
+        </button>
       </div>
       <div class="modal-body">
         <div id="video-modal-text">
           Здесь будет видео. Сейчас оно в процессе записи.
         </div>
         <div class="modal-placeholder">
-          💡 Как только видео будет готово, мы просто подставим сюда плеер, а структура страницы останется той же.
+          💡 Как только видео будет готово, мы просто вставим сюда плеер, а
+          структура страницы останется той же.
         </div>
       </div>
     </div>
@@ -598,7 +625,7 @@
 
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- Ваш основной скрипт -->
+  <!-- Основной скрипт -->
   <script src="script.js"></script>
 </body>
 </html>
