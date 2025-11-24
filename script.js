@@ -36,6 +36,8 @@
     const closeBtn = document.getElementById("video-modal-close");
     const cards = document.querySelectorAll(".video-card");
 
+    if (!modal || !modalTitle || !modalText || !closeBtn) return;
+
     function openModal(type) {
       if (type === "welcome") {
         modalTitle.textContent = "Приветственное видео";
@@ -73,9 +75,11 @@
   // ---------- TELEGRAM USER ----------
   function initTelegramUser() {
     const userIdEl = document.getElementById("user-id");
+    const userNameEl = document.getElementById("user-name");
+    const avatarEl = document.getElementById("user-avatar");
     if (!userIdEl) return;
 
-    function setText(text) {
+    function setIdText(text) {
       userIdEl.textContent = text;
     }
 
@@ -101,13 +105,27 @@
               user.username ||
               "Участник";
 
-            setText(String(user.id));
+            setIdText(String(user.id));
+
+            // Имя в профиль
+            if (userNameEl) {
+              userNameEl.textContent = currentUser.name;
+            }
+
+            // Рандомный emoji-аватар
+            if (avatarEl) {
+              const emojis = ["🦊","🐸","🦁","🐼","🐨","🐯","🕊️","🌿","🎧","✨"];
+              const index = currentUser.id
+                ? currentUser.id % emojis.length
+                : Math.floor(Math.random() * emojis.length);
+              avatarEl.textContent = emojis[index];
+            }
           } else {
-            setText("нет данных");
+            setIdText("нет данных");
           }
         } catch (e) {
           console.error("Ошибка Telegram WebApp:", e);
-          setText("ошибка");
+          setIdText("ошибка");
         }
         return;
       }
@@ -117,7 +135,7 @@
         return;
       }
 
-      setText("откройте через Telegram");
+      setIdText("откройте через Telegram");
     }
 
     if (document.readyState === "loading") {
