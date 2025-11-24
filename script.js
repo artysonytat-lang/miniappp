@@ -129,22 +129,37 @@
   }
 
   // ---------- КНОПКА ОПЛАТЫ ЧЕРЕЗ БОТА ----------
-  function setupPayButton() {
-    const btn = document.getElementById("pay-btn");
-    if (!btn) return;
+function setupPayButton() {
+  const btn = document.getElementById("pay-btn");
+  if (!btn) return;
 
-    const botLink = "https://t.me/voxvik_bot?start=pay";
+  const botLink = "https://t.me/voxvik_bot?start=pay";
 
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      if (window.Telegram && window.Telegram.WebApp) {
-        // корректный способ открыть бота из WebApp
-        window.Telegram.WebApp.openTelegramLink(botLink);
-      } else {
-        window.open(botLink, "_blank");
-      }
-    });
-  }
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    // Если мы внутри Telegram WebApp (мини-приложение)
+    if (window.Telegram && window.Telegram.WebApp) {
+      const tg = window.Telegram.WebApp;
+
+      // Отправляем в бота сигнал "user_clicked_pay"
+      tg.sendData(
+        JSON.stringify({
+          action: "pay",
+        })
+      );
+
+      // Можно сразу закрыть WebApp, чтобы пользователь увидел диалог с ботом
+      tg.close();
+
+      return;
+    }
+
+    // Если открыто просто в браузере — тогда уже открываем ссылку на бота
+    window.open(botLink, "_blank");
+  });
+}
+
 
   // ---------- ВНУТРЕННИЙ ЧАТ (БОЕВОЙ, через сервер) ----------
 
@@ -288,3 +303,4 @@
     onReady();
   }
 })();
+
