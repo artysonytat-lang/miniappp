@@ -8,33 +8,151 @@
   <style>
     :root {
       /* Премиальные цвета */
-      --green-main: #b7ff3c;   /* салатовый premium */
-      --green-dark: #75c927;
-      --green-glow: #d8ff86;
-      --yellow-main: #ffe98a;
-      --text-main: #111;
-      --text-muted: #666;
-      --white: #fff;
-      --bg: #f9fafb;
+      --bg: #f6f7fb;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+
+      --lime-main: #c7ff4f;
+      --lime-soft: #e9ffd2;
+      --lime-deep: #84cc16;
+
+      --card-white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
       margin: 0;
       padding: 0;
       background: var(--bg);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
       color: var(--text-main);
     }
 
     .app {
-      padding-bottom: 70px;
+      padding: 12px 14px 72px;
     }
 
     main {
-      padding: 16px;
+      max-width: 520px;
+      margin: 0 auto;
     }
 
-    /* ЭКРАНЫ */
+    /* ====== АНИМАЦИИ ====== */
+
+    @keyframes float {
+      0%   { transform: translateY(0px); }
+      50%  { transform: translateY(-4px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @keyframes glowPulse {
+      0%   { box-shadow: 0 0 0 0 rgba(199,255,79,0.5); }
+      50%  { box-shadow: 0 0 0 10px rgba(199,255,79,0.0); }
+      100% { box-shadow: 0 0 0 0 rgba(199,255,79,0.0); }
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    /* ====== ПРОФИЛЬ СВЕРХУ ====== */
+
+    .profile-card {
+      position: relative;
+      margin-bottom: 16px;
+      padding: 14px 14px 14px 12px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #fdfdfd, #f7ffe8);
+      box-shadow:
+        0 8px 18px rgba(15, 23, 42, 0.08),
+        0 0 0 1px rgba(199,255,79,0.25);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .profile-glow {
+      position: absolute;
+      right: -40px;
+      top: -50px;
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle at 20% 20%, var(--lime-main), #fefce8);
+      opacity: 0.55;
+      filter: blur(2px);
+      animation: float 5s ease-in-out infinite;
+    }
+
+    .profile-avatar {
+      position: relative;
+      z-index: 1;
+      width: 54px;
+      height: 54px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #ffffff, var(--lime-main));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 700;
+      color: #111827;
+      animation: glowPulse 2.6s infinite;
+    }
+
+    .profile-main {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .profile-name {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .profile-status-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .badge-sub {
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(199,255,79,0.18);
+      color: #166534;
+    }
+
+    .profile-subinfo {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .profile-id {
+      margin-top: 2px;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .profile-id span {
+      font-family: monospace;
+    }
+
+    /* ====== ЭКРАНЫ ====== */
+
     .screen {
       display: none;
     }
@@ -42,7 +160,8 @@
       display: block;
     }
 
-    /* ВИДЕО-КНОПКИ - ПРЕМИУМ СТИЛЬ */
+    /* ====== ВИДЕО-КНОПКИ ====== */
+
     .video-row {
       display: flex;
       gap: 12px;
@@ -50,127 +169,209 @@
     }
 
     .video-card {
-      flex: 1;
       position: relative;
+      flex: 1;
       border: none;
       border-radius: 22px;
-      padding: 18px 14px 18px 16px;
-      background: linear-gradient(135deg, var(--white), var(--green-glow));
+      padding: 16px 14px 14px 14px;
+      background: linear-gradient(120deg, #ffffff, #f9ffe9, #f4f4ff);
+      background-size: 200% 100%;
       box-shadow:
-        0 6px 14px rgba(0,0,0,0.05),
-        0 0 0 2px rgba(183,255,60,0.25);
+        0 8px 18px rgba(15,23,42,0.09),
+        0 0 0 1px rgba(199,255,79,0.25);
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
       overflow: hidden;
-      transition: 0.2s ease;
+      transition: transform 0.18s ease-out, box-shadow 0.18s ease-out;
+      animation: shimmer 6s linear infinite;
     }
 
     .video-card:hover {
-      transform: translateY(-2px);
+      transform: translateY(-3px);
       box-shadow:
-        0 10px 22px rgba(0,0,0,0.08),
-        0 0 0 2px rgba(183,255,60,0.4);
+        0 12px 26px rgba(15,23,42,0.15),
+        0 0 0 1px rgba(199,255,79,0.4);
     }
 
-    /* Акцентный стикер */
-    .video-sticker {
+    /* уникальные стикеры */
+
+    .video-blob {
       position: absolute;
-      right: -10px;
-      top: -10px;
-      width: 70px;
-      height: 70px;
-      border-radius: 20px;
-      background: radial-gradient(circle at 30% 20%, #fff, var(--green-main));
-      box-shadow: 0 8px 18px rgba(183,255,60,0.6);
-      opacity: 0.9;
-      transform: rotate(15deg);
+      right: -28px;
+      top: -18px;
+      width: 110px;
+      height: 80px;
+      border-radius: 60% 40% 60% 40%;
+      background: radial-gradient(circle at 0% 0%, #ffffff, var(--lime-main));
+      opacity: 0.85;
+      filter: drop-shadow(0 10px 18px rgba(199,255,79,0.8));
+      animation: float 4.2s ease-in-out infinite;
+    }
+
+    .video-blob--two {
+      border-radius: 40% 60% 40% 60%;
+      top: -22px;
+      right: -24px;
+    }
+
+    .video-badge {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      background: rgba(15,23,42,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #f9fafb;
+      box-shadow: 0 8px 18px rgba(15,23,42,0.5);
+      z-index: 3;
     }
 
     .video-title {
-      font-size: 16px;
+      position: relative;
+      z-index: 2;
+      font-size: 15px;
       font-weight: 700;
-      z-index: 10;
     }
 
     .video-sub {
-      font-size: 13px;
+      position: relative;
+      z-index: 2;
+      font-size: 12px;
       color: var(--text-muted);
-      max-width: 70%;
-      z-index: 10;
+      max-width: 80%;
     }
 
-    /* ДОСКА ОБЪЯВЛЕНИЙ — PREMIUM */
+    /* ====== ДОСКА ОБЪЯВЛЕНИЙ ====== */
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
     .board {
-      background: linear-gradient(135deg, var(--green-main), var(--green-glow));
-      border-radius: 22px;
-      padding: 16px;
+      position: relative;
+      margin-bottom: 18px;
+      padding: 12px 12px 10px;
+      border-radius: 20px;
+      background: radial-gradient(circle at 0 0, #ffffff 0, var(--lime-soft) 45%, #ccfff8 100%);
       box-shadow:
-        0 8px 20px rgba(183,255,60,0.45),
-        0 0 0 2px rgba(183,255,60,0.5);
-      margin-bottom: 20px;
+        0 10px 26px rgba(148,163,184,0.5),
+        0 0 0 1px rgba(199,255,79,0.45);
+      font-size: 13px;
+    }
+
+    .board-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
     }
 
     .board-title {
       font-weight: 700;
-      font-size: 16px;
-      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .board-chip {
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: rgba(15,23,42,0.08);
     }
 
     .board-item {
-      background: rgba(255,255,255,0.85);
-      padding: 12px 14px;
-      border-radius: 18px;
-      margin-bottom: 10px;
-      font-size: 14px;
+      margin-top: 6px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.86);
+      box-shadow: 0 3px 8px rgba(148,163,184,0.35);
     }
 
-    /* ПОДПИСКА */
+    /* ====== ПОДПИСКА — В ЕДИНОМ СТИЛЕ ====== */
+
     .pay-box {
-      background: linear-gradient(135deg, var(--yellow-main), #fff8c9);
-      padding: 16px;
+      position: relative;
+      margin-bottom: 10px;
+      padding: 14px 14px 14px;
       border-radius: 22px;
+      background: linear-gradient(135deg, #fdfdfd, #f5ffe5);
       box-shadow:
-        0 8px 20px rgba(255,226,133,0.4),
-        0 0 0 2px rgba(255,210,90,0.4);
+        0 10px 26px rgba(15,23,42,0.11),
+        0 0 0 1px rgba(199,255,79,0.4);
+    }
+
+    .pay-ribbon {
+      position: absolute;
+      top: 10px;
+      right: -36px;
+      transform: rotate(18deg);
+      padding: 3px 32px;
+      border-radius: 999px;
+      background: var(--lime-main);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      color: #111827;
+      box-shadow: 0 6px 14px rgba(199,255,79,0.8);
     }
 
     .pay-title {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 700;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .pay-text {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .pay-status {
+      font-size: 12px;
       margin-bottom: 8px;
+      color: #166534;
     }
 
     .pay-btn {
       display: block;
-      margin-top: 10px;
-      padding: 14px;
+      margin-top: 4px;
+      padding: 11px 14px;
       text-align: center;
       border-radius: 999px;
-      background: var(--green-main);
-      color: #000;
+      background: radial-gradient(circle at 0 0, var(--lime-main), var(--lime-deep));
+      color: #062c16;
       font-weight: 700;
+      font-size: 14px;
       text-decoration: none;
-      font-size: 15px;
       box-shadow:
-        0 6px 12px rgba(183,255,60,0.5);
+        0 8px 18px rgba(22,163,74,0.65);
     }
 
-    /* ЧАТ */
+    .pay-btn:active {
+      transform: translateY(1px);
+      box-shadow:
+        0 4px 10px rgba(22,163,74,0.6);
+    }
+
+    /* ====== ЧАТ ====== */
+
     .chat-box {
-      margin-top: 14px;
+      margin-top: 10px;
       padding: 10px 12px;
       border-radius: 18px;
-      background: #fff;
-      border: 1px solid rgba(0,0,0,0.1);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      background: #ffffff;
+      border: 1px solid rgba(148,163,184,0.45);
+      box-shadow: 0 8px 20px rgba(148,163,184,0.45);
       display: flex;
       flex-direction: column;
       height: 360px;
@@ -180,166 +381,250 @@
       flex: 1;
       overflow-y: auto;
       padding-right: 4px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
+      font-size: 13px;
     }
 
     .chat-message {
-      padding: 10px 12px;
-      border-radius: 14px;
       margin-bottom: 8px;
-      font-size: 14px;
+      padding: 8px 10px;
+      border-radius: 14px;
       max-width: 80%;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.07);
+      box-shadow: 0 4px 10px rgba(148,163,184,0.4);
     }
 
     .chat-message.own {
-      background: var(--green-glow);
       margin-left: auto;
+      background: var(--lime-soft);
+      color: #064e3b;
     }
 
     .chat-message.foreign {
-      background: #fff;
       margin-right: auto;
+      background: #ffffff;
+      color: var(--text-main);
     }
 
     .chat-form {
       display: flex;
-      gap: 10px;
+      gap: 8px;
     }
 
     .chat-input {
       flex: 1;
-      padding: 10px 14px;
+      padding: 9px 12px;
       border-radius: 999px;
-      border: 1px solid #ccc;
-      background: #fff;
+      border: 1px solid rgba(148,163,184,0.8);
       font-size: 14px;
     }
 
     .chat-send-btn {
-      padding: 0 18px;
+      padding: 0 14px;
       border-radius: 999px;
       border: none;
-      background: var(--green-main);
+      background: radial-gradient(circle at 0 0, var(--lime-main), var(--lime-deep));
       font-weight: 700;
+      color: #062c16;
       cursor: pointer;
+      box-shadow:
+        0 6px 14px rgba(22,163,74,0.6);
     }
 
-    /* НИЖНЕЕ МЕНЮ */
+    .chat-send-btn:active {
+      transform: translateY(1px);
+    }
+
+    /* ====== НИЖНИЕ ВКЛАДКИ ====== */
+
     .tabs {
       position: fixed;
-      bottom: 0;
       left: 0;
       right: 0;
-      background: #fff;
-      height: 64px;
+      bottom: 0;
+      height: 60px;
+      padding: 4px 12px 6px;
+      background: rgba(255,255,255,0.96);
+      border-top: 1px solid rgba(148,163,184,0.5);
       display: flex;
-      border-top: 1px solid rgba(0,0,0,0.1);
+      gap: 6px;
+      backdrop-filter: blur(18px);
     }
 
     .tab-btn {
       flex: 1;
       border: none;
-      background: none;
-      font-size: 12px;
-      color: #888;
+      background: transparent;
+      border-radius: 999px;
+      font-size: 11px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 1px;
+      color: #9ca3af;
+      cursor: pointer;
+    }
+
+    .tab-btn span.icon {
+      font-size: 18px;
     }
 
     .tab-btn.active {
-      color: var(--green-dark);
+      background: rgba(199,255,79,0.16);
+      color: #166534;
+      font-weight: 600;
+    }
+
+    /* Заголовки на внутренних экранах */
+    .screen-title {
+      font-size: 17px;
       font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .screen-text {
+      font-size: 13px;
+      color: var(--text-muted);
     }
   </style>
 </head>
-
 <body>
   <div class="app">
-
     <main>
+      <!-- ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ -->
+      <section class="profile-card">
+        <div class="profile-glow"></div>
+        <div class="profile-avatar" id="user-avatar">
+          {/* инициал можно менять в script.js */}
+          V
+        </div>
+        <div class="profile-main">
+          <div class="profile-name" id="user-name">Гость VOX</div>
+
+          <div class="profile-status-row">
+            <span class="badge-sub" id="sub-status-badge">Подписка: неактивна</span>
+            <span class="profile-subinfo" id="sub-until-text"></span>
+          </div>
+
+          <div class="profile-id">
+            ID: <span id="user-id">загружается…</span>
+          </div>
+        </div>
+      </section>
 
       <!-- ГЛАВНЫЙ ЭКРАН -->
       <section id="screen-home" class="screen active">
-
-        <!-- Две кнопки -->
+        <!-- Две видеокнопки -->
         <div class="video-row">
           <button class="video-card" data-video="welcome">
-            <div class="video-sticker"></div>
+            <div class="video-blob"></div>
+            <div class="video-badge">👋</div>
             <div class="video-title">Приветственное видео</div>
-            <div class="video-sub">Посмотри перед стартом</div>
+            <div class="video-sub">Коротко познакомимся и настроимся на VOX.</div>
           </button>
 
           <button class="video-card" data-video="howto">
-            <div class="video-sticker"></div>
-            <div class="video-title">Как пользоваться</div>
-            <div class="video-sub">Короткий гайд для старта</div>
+            <div class="video-blob video-blob--two"></div>
+            <div class="video-badge">🎧</div>
+            <div class="video-title">Как пользоваться VOX</div>
+            <div class="video-sub">Гайд по разделам и тому, что внутри.</div>
           </button>
         </div>
 
         <!-- Доска объявлений -->
-        <div class="board">
-          <div class="board-title">📢 Новости VOX</div>
-
+        <div class="section-title">📌 Доска объявлений</div>
+        <div class="board" id="board">
+          <div class="board-header">
+            <div class="board-title">Новости VOX</div>
+            <div class="board-chip">обновляется администратором</div>
+          </div>
           <div class="board-item">
-            Добро пожаловать! Здесь будут свежие объявления и апдейты.
+            Добро пожаловать в приложение VOX. Здесь будут появляться анонсы
+            челленджей, обновления по урокам и важные объявления.
           </div>
         </div>
 
-        <!-- Подписка -->
+        <!-- Блок подписки -->
         <div class="pay-box">
+          <div class="pay-ribbon">FULL ACCESS</div>
           <div class="pay-title">Подписка VOX</div>
           <div class="pay-text">
-            Доступ к технике, челленджам и закрытому чату.
+            Откроет все уроки, технику, челленджи и общий чат сообщества.
           </div>
-          <a id="pay-btn" class="pay-btn" href="#">
-            Оплатить подписку
+          <div class="pay-status" id="sub-status-text">
+            Подписка сейчас неактивна.
+          </div>
+          <a href="#" id="pay-btn" class="pay-btn">
+            Оплатить подписку через бота
           </a>
         </div>
-
       </section>
 
-      <!-- Страница техника -->
+      <!-- Техника -->
       <section id="screen-tech" class="screen">
-        <h3>Раздел “Техника”</h3>
+        <div class="screen-title">Техника</div>
+        <div class="screen-text">
+          Здесь позже появятся структурированные блоки с упражнениями:
+          дыхание, опора, диапазон, резонаторы и т.д.
+        </div>
       </section>
 
-      <!-- Страница челленджей -->
+      <!-- Челленджи -->
       <section id="screen-challenges" class="screen">
-        <h3>Челленджи</h3>
+        <div class="screen-title">Челленджи</div>
+        <div class="screen-text">
+          Тут будут недельные и месячные челленджи, задания и трекинг прогресса.
+        </div>
       </section>
 
-      <!-- ЧАТ -->
+      <!-- Чат -->
       <section id="screen-chat" class="screen">
-        <h3>Чат участников VOX</h3>
+        <div class="screen-title">Чат сообщества</div>
+        <div class="screen-text">
+          Сообщения видят все участники с доступом. Используйте чат для вопросов,
+          отчётов и поддержки друг друга.
+        </div>
 
         <div class="chat-box">
           <div id="chat-messages" class="chat-messages"></div>
 
           <form id="chat-form" class="chat-form">
-            <input id="chat-input" class="chat-input" type="text" placeholder="Сообщение..." />
-            <button class="chat-send-btn">→</button>
+            <input
+              id="chat-input"
+              class="chat-input"
+              type="text"
+              placeholder="Напишите сообщение..."
+              autocomplete="off"
+            />
+            <button type="submit" class="chat-send-btn">Отпр.</button>
           </form>
         </div>
       </section>
-
     </main>
 
-    <!-- Нижнее меню -->
+    <!-- НИЖНИЕ ВКЛАДКИ -->
     <nav class="tabs">
-      <button class="tab-btn active" data-target="home">🏠 Главная</button>
-      <button class="tab-btn" data-target="tech">🎤 Техника</button>
-      <button class="tab-btn" data-target="challenges">🔥 Челленджи</button>
-      <button class="tab-btn" data-target="chat">💬 Чат</button>
+      <button class="tab-btn active" data-target="home">
+        <span class="icon">🏠</span>
+        <span>Главная</span>
+      </button>
+      <button class="tab-btn" data-target="tech">
+        <span class="icon">🎤</span>
+        <span>Техника</span>
+      </button>
+      <button class="tab-btn" data-target="challenges">
+        <span class="icon">🔥</span>
+        <span>Челленджи</span>
+      </button>
+      <button class="tab-btn" data-target="chat">
+        <span class="icon">💬</span>
+        <span>Чат</span>
+      </button>
     </nav>
-
   </div>
 
-  <!-- Telegram API -->
+  <!-- Telegram SDK + логика приложения -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="script.js"></script>
-
 </body>
 </html>
