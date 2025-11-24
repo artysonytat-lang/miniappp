@@ -34,7 +34,7 @@
     const modalTitle = document.getElementById("video-modal-title");
     const modalText = document.getElementById("video-modal-text");
     const closeBtn = document.getElementById("video-modal-close");
-    const cards = document.querySelectorAll(".glow-card");
+    const cards = document.querySelectorAll(".video-card");
 
     function openModal(type) {
       if (type === "welcome") {
@@ -137,23 +137,21 @@
     btn.addEventListener("click", (e) => {
       e.preventDefault();
 
-      // Вариант 1: мы внутри Telegram WebApp
+      // Вариант 1: мини-приложение запущено внутри Telegram
       if (window.Telegram && window.Telegram.WebApp) {
         const tg = window.Telegram.WebApp;
 
-        // Отправляем в бота событие "pay"
         tg.sendData(
           JSON.stringify({
             action: "pay",
           })
         );
 
-        // Закрываем WebApp, чтобы пользователь увидел сообщения бота
         tg.close();
         return;
       }
 
-      // Вариант 2: открыто просто в браузере
+      // Вариант 2: открыто в браузере
       window.open(botLink, "_blank");
     });
   }
