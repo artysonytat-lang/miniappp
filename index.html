@@ -5,6 +5,16 @@
   <title>VOX — мини-приложение</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    :root {
+      /* более «дорогой» зелёный в стиле Apple / premium */
+      --accent-main: #34c759;
+      --accent-dark: #138a3d;
+      --accent-soft: #e6f7ec;
+      --bg-main: #f4f4f6;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+    }
+
     * {
       box-sizing: border-box;
     }
@@ -14,16 +24,16 @@
       padding: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
         "Segoe UI", sans-serif;
-      background: #f5f5f7;
-      color: #111827;
+      background: var(--bg-main);
+      color: var(--text-main);
     }
 
     .app {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      background: #f5f5f7;
-      padding-bottom: 64px; /* место под нижнее меню */
+      background: var(--bg-main);
+      padding-bottom: 64px;
     }
 
     /* ШАПКА */
@@ -33,23 +43,26 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      background: #ffffff;
-      border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+      background: linear-gradient(180deg, #ffffff 0%, #f7f7f9 100%);
+      border-bottom: 1px solid rgba(15, 23, 42, 0.05);
     }
 
     .logo {
-      width: 44px;
-      height: 44px;
+      width: 46px;
+      height: 46px;
       border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, #ffffff, #bff7d9, #4bc38f);
-      box-shadow: 0 0 12px rgba(26, 172, 111, 0.35);
+      background:
+        radial-gradient(circle at 30% 20%, #ffffff, #d4ffe5, #74d890);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.8),
+        0 0 18px rgba(52, 199, 89, 0.7);
       flex-shrink: 0;
     }
 
     .app-title {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 3px;
     }
 
     .app-title-main {
@@ -57,12 +70,12 @@
       font-weight: 700;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: #111827;
+      color: var(--text-main);
     }
 
     .app-title-sub {
       font-size: 13px;
-      color: #6b7280;
+      color: var(--text-muted);
     }
 
     main {
@@ -84,96 +97,110 @@
       font-size: 18px;
       font-weight: 600;
       margin: 4px 0 6px;
-      color: #111827;
+      color: var(--text-main);
     }
 
     .screen-text {
       font-size: 13px;
-      color: #6b7280;
+      color: var(--text-muted);
     }
 
     .section-title {
       font-size: 15px;
       font-weight: 600;
       margin: 18px 0 8px;
-      color: #111827;
+      color: var(--text-main);
     }
 
-    /* КАРТОЧКИ ВИДЕО (светлый, с зелёным свечением) */
+    /* ДВЕ ВЕРХНИЕ КНОПКИ-ВИДЕО */
 
-    .glow-card {
-      position: relative;
-      border-radius: 18px;
-      overflow: hidden;
-      margin: 10px 0;
-      background: #ffffff;
-      border: 1px solid rgba(15, 23, 42, 0.06);
-      box-shadow: 0 8px 20px rgba(148, 163, 184, 0.16);
-      cursor: pointer;
-      transition: box-shadow 0.2s ease-out, transform 0.2s ease-out,
-        border-color 0.2s ease-out;
-    }
-
-    .glow-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background: radial-gradient(
-        circle at 0% 0%,
-        rgba(34, 197, 94, 0.18),
-        transparent 55%
-      );
-      pointer-events: none;
-    }
-
-    .glow-card-inner {
-      position: relative;
-      padding: 14px 16px;
+    .video-row {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
+      margin-top: 8px;
+      margin-bottom: 10px;
     }
 
-    .glow-card:hover {
-      box-shadow: 0 10px 26px rgba(74, 222, 128, 0.35);
-      transform: translateY(-1px);
-      border-color: rgba(34, 197, 94, 0.35);
-    }
-
-    .glow-text {
+    .video-card {
+      flex: 1;
+      position: relative;
+      border-radius: 16px;
+      border: none;
+      padding: 12px 12px 12px 14px;
+      background: linear-gradient(130deg, #ffffff 0%, #f9fff9 40%, #e6f7ec 100%);
+      box-shadow:
+        0 6px 14px rgba(148, 163, 184, 0.25),
+        0 0 0 1px rgba(15, 23, 42, 0.04);
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      align-items: flex-start;
+      gap: 4px;
+      cursor: pointer;
+      text-align: left;
+      transition: transform 0.15s ease-out, box-shadow 0.15s ease-out,
+        background 0.15s ease-out;
     }
 
-    .glow-title {
-      font-size: 15px;
-      font-weight: 600;
-      color: #111827;
-    }
-
-    .glow-sub {
-      font-size: 12px;
-      color: #6b7280;
-    }
-
-    .glow-btn {
-      border: none;
+    .video-card::after {
+      content: "▶";
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      width: 26px;
+      height: 26px;
       border-radius: 999px;
-      padding: 8px 16px;
+      background: radial-gradient(circle at 30% 20%, #ffffff, var(--accent-main));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: #ffffff;
+      box-shadow: 0 4px 10px rgba(52, 199, 89, 0.75);
+    }
+
+    .video-card:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 10px 22px rgba(148, 163, 184, 0.3),
+        0 0 0 1px rgba(52, 199, 89, 0.35);
+      background: linear-gradient(135deg, #ffffff 0%, #f4fff8 50%, #d9f4e4 100%);
+    }
+
+    .video-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent-dark);
+    }
+
+    .video-title {
       font-size: 14px;
       font-weight: 600;
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: #ffffff;
-      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.45);
+      color: var(--text-main);
+    }
+
+    .video-text {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .video-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(52, 199, 89, 0.08);
+      font-size: 11px;
+      color: var(--accent-dark);
+      margin-top: 3px;
     }
 
     /* ДОСКА ОБЪЯВЛЕНИЙ */
 
     .board {
-      margin-top: 4px;
+      margin-top: 6px;
       padding: 12px 14px;
       background: #ffffff;
       border-radius: 16px;
@@ -194,7 +221,7 @@
     .board-item-title {
       font-weight: 600;
       margin-bottom: 2px;
-      color: #111827;
+      color: var(--text-main);
     }
 
     .board-item-date {
@@ -209,7 +236,7 @@
       margin-top: 18px;
       padding: 14px;
       border-radius: 18px;
-      background: linear-gradient(135deg, #fdf5e6, #fefbea);
+      background: linear-gradient(135deg, #fffdf3, #fefbea);
       border: 1px solid rgba(234, 179, 8, 0.55);
       box-shadow: 0 8px 18px rgba(202, 138, 4, 0.25);
       font-size: 14px;
@@ -248,12 +275,12 @@
       padding: 12px 14px;
       border-radius: 999px;
       text-align: center;
-      background: linear-gradient(135deg, #22c55e, #16a34a);
+      background: linear-gradient(135deg, var(--accent-main), var(--accent-dark));
       color: #ffffff;
       font-weight: 700;
       text-decoration: none;
       font-size: 14px;
-      box-shadow: 0 6px 18px rgba(34, 197, 94, 0.5);
+      box-shadow: 0 6px 18px rgba(52, 199, 89, 0.5);
     }
 
     .pay-btn:active {
@@ -296,14 +323,14 @@
 
     .chat-message.own {
       margin-left: auto;
-      background: #dcfce7; /* мягкий зелёный */
+      background: var(--accent-soft);
       color: #064e3b;
     }
 
     .chat-message.foreign {
       margin-right: auto;
       background: #ffffff;
-      color: #111827;
+      color: var(--text-main);
     }
 
     .chat-message-header {
@@ -311,7 +338,7 @@
       justify-content: space-between;
       gap: 8px;
       font-size: 11px;
-      color: #6b7280;
+      color: var(--text-muted);
       margin-bottom: 3px;
     }
 
@@ -340,7 +367,7 @@
       padding: 9px 12px;
       font-size: 14px;
       background: #f9fafb;
-      color: #111827;
+      color: var(--text-main);
     }
 
     .chat-input::placeholder {
@@ -351,12 +378,12 @@
       border: none;
       border-radius: 999px;
       padding: 0 14px;
-      background: linear-gradient(135deg, #22c55e, #16a34a);
+      background: linear-gradient(135deg, var(--accent-main), var(--accent-dark));
       color: #ffffff;
       font-weight: 600;
       font-size: 14px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.5);
+      box-shadow: 0 4px 12px rgba(52, 199, 89, 0.5);
     }
 
     .chat-send-btn:active {
@@ -401,8 +428,8 @@
     }
 
     .tab-btn.active {
-      background: rgba(34, 197, 94, 0.08);
-      color: #16a34a;
+      background: rgba(52, 199, 89, 0.08);
+      color: var(--accent-dark);
     }
 
     /* МОДАЛКА ВИДЕО */
@@ -430,7 +457,7 @@
       padding: 16px 16px 14px;
       border: 1px solid rgba(148, 163, 184, 0.4);
       box-shadow: 0 18px 40px rgba(15, 23, 42, 0.4);
-      color: #111827;
+      color: var(--text-main);
     }
 
     .modal-header {
@@ -468,7 +495,7 @@
       border-radius: 12px;
       border: 1px dashed rgba(148, 163, 184, 0.8);
       font-size: 13px;
-      color: #6b7280;
+      color: var(--text-muted);
     }
   </style>
 </head>
@@ -485,24 +512,24 @@
     <main>
       <!-- ГЛАВНЫЙ ЭКРАН -->
       <section id="screen-home" class="screen active">
-        <div class="glow-card" data-video="welcome">
-          <div class="glow-card-inner">
-            <div class="glow-text">
-              <div class="glow-title">Приветственное видео</div>
-              <div class="glow-sub">о том, что тебя ждёт внутри VOX</div>
+        <div class="video-row">
+          <button class="video-card" data-video="welcome">
+            <div class="video-label">🎬 VOX INTRO</div>
+            <div class="video-title">Приветственное видео</div>
+            <div class="video-text">
+              Нажми, чтобы познакомиться с VOX и атмосферой сообщества.
             </div>
-            <button class="glow-btn">▶ Смотреть</button>
-          </div>
-        </div>
+            <div class="video-badge">Пройти знакомство</div>
+          </button>
 
-        <div class="glow-card" data-video="howto">
-          <div class="glow-card-inner">
-            <div class="glow-text">
-              <div class="glow-title">Как пользоваться приложением</div>
-              <div class="glow-sub">короткий разбор разделов и логики</div>
+          <button class="video-card" data-video="howto">
+            <div class="video-label">📚 HOW TO</div>
+            <div class="video-title">Как пользоваться приложением</div>
+            <div class="video-text">
+              Коротко и по делу: где техника, челленджи и как строить занятия.
             </div>
-            <button class="glow-btn">▶ Смотреть</button>
-          </div>
+            <div class="video-badge">Инструкция по VOX</div>
+          </button>
         </div>
 
         <div class="section-title">📌 Доска объявлений</div>
