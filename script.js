@@ -28,13 +28,12 @@
     });
   }
 
-  // ---------- МОДАЛКА ДЛЯ ВИДЕО (пока заглушка) ----------
+  // ---------- МОДАЛКА ВИДЕО ----------
   function setupVideoModal() {
     const modal = document.getElementById("video-modal");
     const modalTitle = document.getElementById("video-modal-title");
     const modalText = document.getElementById("video-modal-text");
     const closeBtn = document.getElementById("video-modal-close");
-
     const cards = document.querySelectorAll(".glow-card");
 
     function openModal(type) {
@@ -71,7 +70,7 @@
     });
   }
 
-  // ---------- ПОЛУЧЕНИЕ TELEGRAM ID + ИМЕНИ ----------
+  // ---------- TELEGRAM USER ----------
   function initTelegramUser() {
     const userIdEl = document.getElementById("user-id");
     if (!userIdEl) return;
@@ -129,40 +128,37 @@
   }
 
   // ---------- КНОПКА ОПЛАТЫ ЧЕРЕЗ БОТА ----------
-function setupPayButton() {
-  const btn = document.getElementById("pay-btn");
-  if (!btn) return;
+  function setupPayButton() {
+    const btn = document.getElementById("pay-btn");
+    if (!btn) return;
 
-  const botLink = "https://t.me/voxvik_bot?start=pay";
+    const botLink = "https://t.me/voxvik_bot?start=pay";
 
-  btn.addEventListener("click", (e) => {
-    e.preventDefault();
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
 
-    // Если мы внутри Telegram WebApp (мини-приложение)
-    if (window.Telegram && window.Telegram.WebApp) {
-      const tg = window.Telegram.WebApp;
+      // Вариант 1: мы внутри Telegram WebApp
+      if (window.Telegram && window.Telegram.WebApp) {
+        const tg = window.Telegram.WebApp;
 
-      // Отправляем в бота сигнал "user_clicked_pay"
-      tg.sendData(
-        JSON.stringify({
-          action: "pay",
-        })
-      );
+        // Отправляем в бота событие "pay"
+        tg.sendData(
+          JSON.stringify({
+            action: "pay",
+          })
+        );
 
-      // Можно сразу закрыть WebApp, чтобы пользователь увидел диалог с ботом
-      tg.close();
+        // Закрываем WebApp, чтобы пользователь увидел сообщения бота
+        tg.close();
+        return;
+      }
 
-      return;
-    }
+      // Вариант 2: открыто просто в браузере
+      window.open(botLink, "_blank");
+    });
+  }
 
-    // Если открыто просто в браузере — тогда уже открываем ссылку на бота
-    window.open(botLink, "_blank");
-  });
-}
-
-
-  // ---------- ВНУТРЕННИЙ ЧАТ (БОЕВОЙ, через сервер) ----------
-
+  // ---------- ЧАТ (API) ----------
   const CHAT_API_BASE = "/api/chat";
 
   function setupChat() {
@@ -223,7 +219,6 @@ function setupPayButton() {
         const data = await res.json();
 
         if (Array.isArray(data.messages) && data.messages.length > 0) {
-          // если initial — просто заменяем, иначе добавляем новые
           if (initial) {
             messages = data.messages;
           } else {
@@ -270,7 +265,6 @@ function setupPayButton() {
       }
     }
 
-    // обработчик формы
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       const value = (input.value || "").trim();
@@ -303,4 +297,3 @@ function setupPayButton() {
     onReady();
   }
 })();
-
