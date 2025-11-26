@@ -146,7 +146,7 @@
             }
 
             if (subStatusTextEl) {
-              // здесь позже можно подставлять реальное состояние из бэкенда
+              // позже можно подставлять реальное состояние подписки
               subStatusTextEl.textContent = "Подписка неактивна";
             }
           } else {
@@ -172,6 +172,29 @@
     } else {
       tryInit();
     }
+  }
+
+  // ---------- МОДАЛКА ПОДПИСКИ И ПЛАШКА ----------
+
+  function setupSubModal() {
+    const banner = document.getElementById("sub-banner");
+    const modal = document.getElementById("sub-modal");
+    const closeBtn = document.getElementById("sub-modal-close");
+
+    if (!banner || !modal || !closeBtn) return;
+
+    banner.addEventListener("click", () => {
+      modal.classList.add("active");
+    });
+
+    function close() {
+      modal.classList.remove("active");
+    }
+
+    closeBtn.addEventListener("click", close);
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) close();
+    });
   }
 
   // ---------- КНОПКА ОПЛАТЫ ЧЕРЕЗ БОТА ----------
@@ -262,8 +285,7 @@
         const data = await res.json();
 
         if (Array.isArray(data.messages)) {
-          // берем актуальный список с сервера, без concat -> без дублей
-          messages = data.messages;
+          messages = data.messages; // всегда берём свежий список -> без дублей
           render();
         }
       } catch (e) {
@@ -321,6 +343,7 @@
     setupTabs();
     setupVideoModal();
     initTelegramUser();
+    setupSubModal();
     setupPayButton();
     setupChat();
   }
