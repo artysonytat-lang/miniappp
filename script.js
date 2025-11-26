@@ -1,14 +1,14 @@
 (function () {
   // ---------- ЦВЕТА ДЛЯ ИМЁН В ЧАТЕ ----------
   const NAME_COLORS = [
-    "#ef4444", // красный
-    "#f97316", // оранжевый
-    "#eab308", // жёлтый
-    "#22c55e", // зелёный
-    "#06b6d4", // бирюзовый
-    "#3b82f6", // синий
-    "#a855f7", // фиолетовый
-    "#ec4899"  // розовый
+    "#FAED26",
+    "#f97316",
+    "#eab308",
+    "#22c55e",
+    "#06b6d4",
+    "#3b82f6",
+    "#a855f7",
+    "#ec4899",
   ];
 
   function getColorForUser(idOrName) {
@@ -65,14 +65,15 @@
       if (type === "welcome") {
         modalTitle.textContent = "Приветственное видео";
         modalText.textContent =
-          "Здесь будет видео-приветствие, где ты познакомишься с философией VOX.";
+          "Здесь будет видео-приветствие, где ты познакомишься с философией VOX и почувствуешь атмосферу комьюнити.";
       } else if (type === "howto") {
         modalTitle.textContent = "Как пользоваться приложением";
         modalText.textContent =
-          "Здесь будет видео-инструкция о том, как устроены разделы, как заниматься и где что искать.";
+          "Здесь будет видео-инструкция о том, как устроены разделы VOX, где искать техники, как участвовать в челленджах и писать в чат.";
       } else {
         modalTitle.textContent = "Видео";
-        modalText.textContent = "Здесь будет видео. Сейчас оно в процессе записи.";
+        modalText.textContent =
+          "Здесь будет видео. Сейчас оно в процессе записи.";
       }
       modal.classList.add("active");
     }
@@ -105,7 +106,7 @@
     if (!userIdEl) return;
 
     function setIdText(text) {
-      userIdEl.textContent = text;
+      userIdEl.textContent = "ID: " + text;
     }
 
     let attempts = 0;
@@ -132,22 +133,20 @@
 
             setIdText(String(user.id));
 
-            // Имя на главной
             if (userNameEl) {
               userNameEl.textContent = currentUser.name;
             }
 
-            // Рандомный emoji-аватар, но детерминированный по id
             if (avatarEl) {
-              const emojis = ["🦊","🐸","🦁","🐼","🐨","🐯","🕊️","🌿","🎧","✨"];
+              const emojis = ["🦊", "🎧", "🎤", "✨", "🌙", "🔥", "🎵", "🐆"];
               const index = currentUser.id
                 ? currentUser.id % emojis.length
                 : Math.floor(Math.random() * emojis.length);
               avatarEl.textContent = emojis[index];
             }
 
-            // Здесь можно в будущем подставлять реальный статус подписки
             if (subStatusTextEl) {
+              // здесь позже можно подставлять реальное состояние из бэкенда
               subStatusTextEl.textContent = "Подписка неактивна";
             }
           } else {
@@ -185,21 +184,23 @@
     btn.addEventListener("click", (e) => {
       e.preventDefault();
 
-      // Вариант 1: мини-приложение запущено внутри Telegram
       if (window.Telegram && window.Telegram.WebApp) {
         const tg = window.Telegram.WebApp;
 
-        tg.sendData(
-          JSON.stringify({
-            action: "pay",
-          })
-        );
+        try {
+          tg.sendData(
+            JSON.stringify({
+              action: "pay",
+            })
+          );
+        } catch (err) {
+          console.error("Ошибка tg.sendData:", err);
+        }
 
         tg.close();
         return;
       }
 
-      // Вариант 2: открыто в браузере
       window.open(botLink, "_blank");
     });
   }
@@ -215,7 +216,6 @@
 
     let messages = [];
     let isLoading = false;
-    let lastTimestamp = null;
 
     function render() {
       listEl.innerHTML = "";
@@ -231,7 +231,6 @@
         nameEl.className = "chat-message-name";
         nameEl.textContent = m.user_name || "Участник";
 
-        // разноцветные имена по user_id / имени
         const userKey = m.user_id || m.user_name || "";
         nameEl.style.color = getColorForUser(userKey);
 
@@ -254,29 +253,17 @@
       listEl.scrollTop = listEl.scrollHeight;
     }
 
-    async function fetchMessages(initial = false) {
+    async function fetchMessages() {
       if (isLoading) return;
       isLoading = true;
       try {
-        const url = lastTimestamp
-          ? `${CHAT_API_BASE}/messages?after=${encodeURIComponent(
-              lastTimestamp
-            )}`
-          : `${CHAT_API_BASE}/messages`;
-
-        const res = await fetch(url);
+        const res = await fetch(`${CHAT_API_BASE}/messages`);
         if (!res.ok) throw new Error("Ошибка загрузки чата");
         const data = await res.json();
 
-        if (Array.isArray(data.messages) && data.messages.length > 0) {
-          if (initial) {
-            messages = data.messages;
-          } else {
-            messages = messages.concat(data.messages);
-          }
-
-          const last = data.messages[data.messages.length - 1];
-          lastTimestamp = last.created_at;
+        if (Array.isArray(data.messages)) {
+          // берем актуальный список с сервера, без concat -> без дублей
+          messages = data.messages;
           render();
         }
       } catch (e) {
@@ -304,12 +291,9 @@
         });
 
         if (!res.ok) throw new Error("Ошибка отправки сообщения");
-        const data = await res.json();
-        if (data && data.message) {
-          messages.push(data.message);
-          lastTimestamp = data.message.created_at;
-          render();
-        }
+
+        // После успешной отправки сразу обновляем чат с сервера.
+        await fetchMessages();
       } catch (e) {
         console.error(e);
       }
@@ -324,11 +308,11 @@
     });
 
     // начальная загрузка
-    fetchMessages(true);
+    fetchMessages();
 
-    // периодическая подгрузка новых
+    // периодическая подгрузка свежих сообщений
     setInterval(() => {
-      fetchMessages(false);
+      fetchMessages();
     }, 3000);
   }
 
