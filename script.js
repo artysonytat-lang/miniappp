@@ -1,5 +1,6 @@
 (function () {
-    const NAME_COLORS = [
+  // ---------- ЦВЕТА ДЛЯ ИМЁН В ЧАТЕ ----------
+  const NAME_COLORS = [
     "#ef4444", // красный
     "#f97316", // оранжевый
     "#eab308", // жёлтый
@@ -20,6 +21,7 @@
     return NAME_COLORS[idx];
   }
 
+  // ---------- ТЕКУЩИЙ ПОЛЬЗОВАТЕЛЬ ----------
   let currentUser = {
     id: null,
     name: "Гость",
@@ -93,11 +95,13 @@
     });
   }
 
-  // ---------- TELEGRAM USER ----------
+  // ---------- TELEGRAM USER + АВАТАР ----------
   function initTelegramUser() {
     const userIdEl = document.getElementById("user-id");
     const userNameEl = document.getElementById("user-name");
     const avatarEl = document.getElementById("user-avatar");
+    const subStatusTextEl = document.getElementById("sub-status-text");
+
     if (!userIdEl) return;
 
     function setIdText(text) {
@@ -128,18 +132,23 @@
 
             setIdText(String(user.id));
 
-            // Имя в профиль
+            // Имя на главной
             if (userNameEl) {
               userNameEl.textContent = currentUser.name;
             }
 
-            // Рандомный emoji-аватар
+            // Рандомный emoji-аватар, но детерминированный по id
             if (avatarEl) {
               const emojis = ["🦊","🐸","🦁","🐼","🐨","🐯","🕊️","🌿","🎧","✨"];
               const index = currentUser.id
                 ? currentUser.id % emojis.length
                 : Math.floor(Math.random() * emojis.length);
               avatarEl.textContent = emojis[index];
+            }
+
+            // Здесь можно в будущем подставлять реальный статус подписки
+            if (subStatusTextEl) {
+              subStatusTextEl.textContent = "Подписка неактивна";
             }
           } else {
             setIdText("нет данных");
@@ -221,6 +230,10 @@
         const nameEl = document.createElement("div");
         nameEl.className = "chat-message-name";
         nameEl.textContent = m.user_name || "Участник";
+
+        // разноцветные имена по user_id / имени
+        const userKey = m.user_id || m.user_name || "";
+        nameEl.style.color = getColorForUser(userKey);
 
         const timeEl = document.createElement("div");
         timeEl.className = "chat-message-time";
@@ -334,4 +347,3 @@
     onReady();
   }
 })();
-
