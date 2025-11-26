@@ -401,11 +401,20 @@
 
     /* ---------- ЧАТ ---------- */
 
-    .screen-chat {
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-    }
+/* ---------- ЧАТ ---------- */
+
+/* базовый класс без display */
+.screen-chat {
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* а отображение — только когда вкладка активна */
+.screen.screen-chat.active {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
 
     .chat-box {
       flex: 1;
@@ -783,3 +792,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
