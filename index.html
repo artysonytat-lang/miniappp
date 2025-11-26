@@ -5,7 +5,6 @@
   <title>VOX — мини-приложение</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Телеграм WebApp JS (у Телеги он подсовывается сам, это просто на всякий случай) -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
@@ -115,6 +114,7 @@
       border-top-right-radius: 24px;
       padding: 12px 14px 6px;
       color: var(--text-main);
+      min-height: 0;
     }
 
     /* ---------- USER HEADER (ТОЛЬКО НА ГЛАВНОЙ) ---------- */
@@ -172,7 +172,26 @@
       color: #9ca3af;
     }
 
-    /* ---------- GRID БЛОКОВ НА ГЛАВНОЙ ---------- */
+    /* ---------- ГЛАВНАЯ: ОБЩАЯ ВЕРСТКА ---------- */
+
+    .home-wrapper {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .home-top {
+      flex-shrink: 0;
+    }
+
+    .home-middle {
+      flex: 1;
+      min-height: 0;
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+    }
 
     .section-title {
       font-size: 14px;
@@ -185,8 +204,10 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
     }
+
+    /* ---------- КАРТОЧКИ ВИДЕО ---------- */
 
     .card-video {
       position: relative;
@@ -238,30 +259,16 @@
       transform: rotate(-8deg);
     }
 
-    /* ---------- ОБЪЯВЛЕНИЯ И ПОДПИСКА ---------- */
+    /* ---------- ДОСКА ОБЪЯВЛЕНИЙ ---------- */
 
-    .stack {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-
-    .card-soft {
-      border-radius: var(--radius-md);
-      padding: 10px 12px 11px;
-      background: #f3f4f6;
-      border: 1px solid #e5e7eb;
-    }
-
-    .card-soft-header {
+    .announcements-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 4px;
     }
 
-    .card-soft-title {
+    .announcements-title {
       font-size: 13px;
       font-weight: 600;
       color: #374151;
@@ -270,11 +277,11 @@
       gap: 6px;
     }
 
-    .card-soft-title span.icon {
-      font-size: 15px;
+    .announcements-title span.icon {
+      font-size: 16px;
     }
 
-    .badge-soft {
+    .announcements-badge {
       font-size: 10px;
       padding: 2px 8px;
       border-radius: 999px;
@@ -284,76 +291,75 @@
       letter-spacing: 0.12em;
     }
 
-    .card-soft-text {
+    .announcements-list {
+      flex: 1;
+      min-height: 0;
+      border-radius: 16px;
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      padding: 8px 10px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .announcement-item {
+      padding: 6px 4px 8px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .announcement-item:last-child {
+      border-bottom: none;
+    }
+
+    .announcement-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 2px;
+      color: #374151;
+    }
+
+    .announcement-text {
       font-size: 13px;
       color: #6b7280;
       line-height: 1.35;
     }
 
-    /* Подписка */
-
-    .card-sub {
-      border-radius: var(--radius-md);
-      padding: 10px 12px 11px;
-      background: linear-gradient(135deg, #5a5560 0, #46344e 50%, #2b2936 100%);
-      color: #f9fafb;
-      box-shadow: 0 10px 22px rgba(17, 24, 39, 0.6);
-    }
-
-    .card-sub-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4px;
-    }
-
-    .card-sub-title {
-      font-size: 13px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .card-sub-title span.icon {
-      font-size: 16px;
-    }
-
-    .card-sub-text {
-      font-size: 13px;
-      color: #e5e7eb;
-      line-height: 1.35;
-      margin-bottom: 8px;
-    }
-
-    .pill-status {
+    .announcement-meta {
+      margin-top: 2px;
       font-size: 11px;
-      padding: 2px 9px;
-      border-radius: 999px;
-      background: rgba(250, 237, 38, 0.18);
-      border: 1px solid rgba(250, 237, 38, 0.7);
-      color: var(--accent);
+      color: #9ca3af;
     }
 
-    .btn-accent {
-      display: inline-flex;
+    /* ---------- ПЛАШКА ПОДПИСКИ ВНИЗУ ---------- */
+
+    .sub-banner {
+      background: linear-gradient(90deg, #46344e 0, #5a5560 50%, #9b786f 100%);
+      padding: 6px 14px 8px;
+      display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 6px;
-      border-radius: 999px;
-      background: var(--accent);
-      color: #1f2933;
-      padding: 8px 16px;
-      font-size: 14px;
-      font-weight: 600;
-      border: none;
-      width: 100%;
+      justify-content: space-between;
+      color: #f9fafb;
       cursor: pointer;
-      box-shadow: 0 10px 22px rgba(250, 237, 38, 0.45);
+      box-shadow: 0 -6px 16px rgba(15, 23, 42, 0.45);
     }
 
-    .btn-accent span.icon {
+    .sub-banner-main {
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sub-banner-main span.icon {
       font-size: 16px;
+    }
+
+    .sub-banner-sub {
+      font-size: 11px;
+      opacity: 0.85;
     }
 
     /* ---------- ЭКРАНЫ ---------- */
@@ -401,20 +407,18 @@
 
     /* ---------- ЧАТ ---------- */
 
-/* ---------- ЧАТ ---------- */
+    /* базовый класс без display, чтобы не ломать .screen */
+    .screen-chat {
+      flex-direction: column;
+      min-height: 0;
+    }
 
-/* базовый класс без display */
-.screen-chat {
-  flex-direction: column;
-  min-height: 0;
-}
-
-/* а отображение — только когда вкладка активна */
-.screen.screen-chat.active {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
+    /* показываем чат только когда вкладка активна */
+    .screen.screen-chat.active {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
 
     .chat-box {
       flex: 1;
@@ -550,7 +554,7 @@
       color: var(--accent);
     }
 
-    /* ---------- МОДАЛКА ВИДЕО ---------- */
+    /* ---------- МОДАЛКИ ---------- */
 
     .video-modal {
       position: fixed;
@@ -607,6 +611,27 @@
       font-size: 12px;
       color: #9ca3af;
     }
+
+    .btn-accent {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #1f2933;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(250, 237, 38, 0.45);
+    }
+
+    .btn-accent span.icon {
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
@@ -625,77 +650,79 @@
         <div class="screens">
           <!-- ГЛАВНАЯ -->
           <section class="screen active" id="screen-home">
-            <div>
-              <div class="user-header">
-                <div id="user-avatar" class="user-avatar">🎧</div>
-                <div class="user-info">
-                  <div class="user-name-row">
-                    <div id="user-name" class="user-name">Гость</div>
-                    <div class="user-tag">VOX CLUB</div>
-                  </div>
-                  <div id="sub-status-text" class="user-sub-status">
-                    Подписка неактивна
-                  </div>
-                  <div id="user-id" class="user-id">ID: —</div>
-                </div>
-              </div>
-
-              <div class="section-title">Начни с этого</div>
-
-              <div class="video-row">
-                <a href="#" class="card-video video-card" data-video="welcome">
-                  <div class="card-video-label">Приветствие</div>
-                  <div class="card-video-title">Познакомимся и настроимся</div>
-                  <div class="card-video-pill">
-                    <span>▶</span>
-                    <span>Скоро будет видео</span>
-                  </div>
-                  <div class="card-video-sticker">✨</div>
-                </a>
-
-                <a href="#" class="card-video video-card" data-video="howto">
-                  <div class="card-video-label">Как пользоваться</div>
-                  <div class="card-video-title">Гид по разделам VOX</div>
-                  <div class="card-video-pill">
-                    <span>🎬</span>
-                    <span>Инструкция в записи</span>
-                  </div>
-                  <div class="card-video-sticker">🎤</div>
-                </a>
-              </div>
-
-              <div class="stack">
-                <div class="card-soft">
-                  <div class="card-soft-header">
-                    <div class="card-soft-title">
-                      <span class="icon">📌</span>
-                      Доска объявлений
+            <div class="home-wrapper">
+              <div class="home-top">
+                <div class="user-header">
+                  <div id="user-avatar" class="user-avatar">🎧</div>
+                  <div class="user-info">
+                    <div class="user-name-row">
+                      <div id="user-name" class="user-name">Гость</div>
+                      <div class="user-tag">VOX CLUB</div>
                     </div>
-                    <div class="badge-soft">community</div>
-                  </div>
-                  <div class="card-soft-text">
-                    Здесь администраторы будут публиковать анонсы, расписание
-                    созвонов, обновления по курсу и важные новости.
+                    <div id="sub-status-text" class="user-sub-status">
+                      Подписка неактивна
+                    </div>
+                    <div id="user-id" class="user-id">ID: —</div>
                   </div>
                 </div>
 
-                <div class="card-sub">
-                  <div class="card-sub-header">
-                    <div class="card-sub-title">
-                      <span class="icon">💡</span>
-                      Подписка VOX
+                <div class="section-title">Начни с этого</div>
+
+                <div class="video-row">
+                  <a href="#" class="card-video video-card" data-video="welcome">
+                    <div class="card-video-label">Приветствие</div>
+                    <div class="card-video-title">Познакомимся и настроимся</div>
+                    <div class="card-video-pill">
+                      <span>▶</span>
+                      <span>Скоро будет видео</span>
                     </div>
-                    <div class="pill-status">доступ по подписке</div>
+                    <div class="card-video-sticker">✨</div>
+                  </a>
+
+                  <a href="#" class="card-video video-card" data-video="howto">
+                    <div class="card-video-label">Как пользоваться</div>
+                    <div class="card-video-title">Гид по разделам VOX</div>
+                    <div class="card-video-pill">
+                      <span>🎬</span>
+                      <span>Инструкция в записи</span>
+                    </div>
+                    <div class="card-video-sticker">🎤</div>
+                  </a>
+                </div>
+              </div>
+
+              <div class="home-middle">
+                <div class="announcements-header">
+                  <div class="announcements-title">
+                    <span class="icon">📌</span>
+                    Доска объявлений
                   </div>
-                  <div class="card-sub-text">
-                    Открой доступ к технике, чек-листам, челленджам и чату
-                    сообщества. Оплата проходит через бота, а доступ
-                    привязывается к твоему Telegram-аккаунту.
+                  <div class="announcements-badge">community</div>
+                </div>
+
+                <!-- Пока статический текст; потом можно будет подгружать с бэкенда -->
+                <div id="announcements-list" class="announcements-list">
+                  <div class="announcement-item">
+                    <div class="announcement-title">
+                      Старт сообщества VOX
+                    </div>
+                    <div class="announcement-text">
+                      Здесь администраторы будут публиковать анонсы,
+                      расписание созвонов, обновления по курсу и важные новости.
+                    </div>
+                    <div class="announcement-meta">Сегодня • закреплённое</div>
                   </div>
-                  <button id="pay-btn" class="btn-accent">
-                    <span class="icon">⚡</span>
-                    <span>Оплатить подписку</span>
-                  </button>
+
+                  <div class="announcement-item">
+                    <div class="announcement-title">
+                      Новый челлендж скоро
+                    </div>
+                    <div class="announcement-text">
+                      В ближайшее время здесь появится первый голосовой
+                      челлендж. Следите за обновлениями, чтобы не пропустить старт.
+                    </div>
+                    <div class="announcement-meta">Скоро</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -728,7 +755,7 @@
             <div class="screen-padding">
               <div class="screen-title">Чат сообщества</div>
               <div class="screen-subtitle">
-                Сообщения видят все участники с доступом. Используй чат для
+                Сообщения видят все участники с доступом. Используйте чат для
                 вопросов, отчётов и поддержки других.
               </div>
 
@@ -749,6 +776,15 @@
             </div>
           </section>
         </div>
+      </div>
+
+      <!-- Плашка подписки (показываем тем, у кого нет подписки) -->
+      <div id="sub-banner" class="sub-banner">
+        <div class="sub-banner-main">
+          <span class="icon">⚡</span>
+          <span>Подписка VOX</span>
+        </div>
+        <div class="sub-banner-sub">доступ по подписке</div>
       </div>
 
       <!-- Навигация -->
@@ -789,7 +825,25 @@
     </div>
   </div>
 
+  <!-- Модалка подписки -->
+  <div id="sub-modal" class="video-modal">
+    <div class="video-modal-inner">
+      <div class="video-modal-header">
+        <div class="video-modal-title">Подписка VOX</div>
+        <button id="sub-modal-close" class="video-modal-close">&times;</button>
+      </div>
+      <div class="video-modal-text">
+        Открой доступ к технике, чек-листам, челленджам и чату сообщества.
+        Оплата проходит через бота, а доступ привязывается к твоему
+        Telegram-аккаунту.
+      </div>
+      <button id="pay-btn" class="btn-accent">
+        <span class="icon">⚡</span>
+        <span>Оплатить подписку</span>
+      </button>
+    </div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
-
