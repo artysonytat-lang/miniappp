@@ -1,4 +1,25 @@
 (function () {
+    const NAME_COLORS = [
+    "#ef4444", // красный
+    "#f97316", // оранжевый
+    "#eab308", // жёлтый
+    "#22c55e", // зелёный
+    "#06b6d4", // бирюзовый
+    "#3b82f6", // синий
+    "#a855f7", // фиолетовый
+    "#ec4899"  // розовый
+  ];
+
+  function getColorForUser(idOrName) {
+    const s = String(idOrName || "");
+    let hash = 0;
+    for (let i = 0; i < s.length; i++) {
+      hash = (hash * 31 + s.charCodeAt(i)) | 0;
+    }
+    const idx = Math.abs(hash) % NAME_COLORS.length;
+    return NAME_COLORS[idx];
+  }
+
   let currentUser = {
     id: null,
     name: "Гость",
@@ -313,3 +334,4 @@
     onReady();
   }
 })();
+
